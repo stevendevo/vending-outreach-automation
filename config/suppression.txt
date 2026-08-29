@@ -1,0 +1,5 @@
+# Never contact these. One per line: a full email address, or a bare domain.
+# Added automatically by `vending-outreach suppress`, and safe to edit by hand.
+bestfoodtrucks.com
+foodtruckclub.com
+streetfoodfinder.com

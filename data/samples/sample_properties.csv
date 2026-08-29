@@ -1,0 +1,6 @@
+name,address,city,state,postal_code,website,phone,unit_count,management_company,email,first_name,last_name,title
+Riverloft Apartments,2201 Chestnut St,Philadelphia,PA,19103,https://example-riverloft.com,215-555-0110,318,Bozzuto,leasing@example-riverloft.com,Dana,Whitfield,Community Manager
+The Bexley at Marlton,500 Lincoln Dr,Marlton,NJ,08053,https://example-bexley.com,856-555-0142,240,Morgan Properties,events@example-bexley.com,Priya,Raman,Lifestyle Director
+Haddon Point,1 Haddon Point Way,Pennsauken,NJ,08110,https://example-haddonpoint.com,856-555-0177,412,Morgan Properties,info@example-haddonpoint.com,,,
+Wyncote Commons,8000 Old York Rd,Cheltenham,PA,19012,https://example-wyncote.com,215-555-0188,96,,manager@example-wyncote.com,Chris,Boyle,Property Manager
+Tiny Court Flats,12 Elm Ct,Audubon,NJ,08106,https://example-tinycourt.com,856-555-0199,28,,info@example-tinycourt.com,,,

@@ -1,0 +1,135 @@
+# ===========================================================================
+# Grilly Cheese - apartment & property-management vending outreach
+# ===========================================================================
+# Everything the pipeline needs to behave differently lives here, not in code.
+
+business:
+  name: "Grilly Cheese"
+  owner_name: "Steven Weitzman"
+  home_town: "South Jersey"
+  reply_to: "grillycheese@grillycheese.net"
+  cell: "856-630-4357"
+  office: "844-474-5591"
+  website: "https://www.grillycheese.net"
+  # CAN-SPAM requires a real postal address in every commercial email.
+  postal_address: "Grilly Cheese, PO Box 1023, Marlton, NJ 08053"
+  # Home base used for drive-distance scoring.
+  base_lat: 39.8912
+  base_lng: -74.9218
+
+# The vending offer we are pitching. Residents pay at the window; the property
+# backstops us with a refundable sales guarantee if sales fall short.
+offer:
+  model: "resident-pay vending"
+  sales_guarantee_usd: 1050
+  guarantee_refundable: true
+  service_window_minutes: 120
+  # Typical resident-facing service slot.
+  default_start_local: "17:00"
+  default_end_local: "19:00"
+
+# ---------------------------------------------------------------------------
+# Discovery: where we look for apartment communities.
+# Each market is a search anchor; the grid radius controls how wide we sweep.
+# ---------------------------------------------------------------------------
+discovery:
+  radius_meters: 12000
+  max_results_per_query: 60
+  # Only keep properties within this driving-proxy distance of base.
+  max_distance_miles: 55
+  queries:
+    - "apartment complex"
+    - "apartment building"
+    - "luxury apartments"
+    - "apartment community"
+    - "property management company"
+  markets:
+    - { name: "Philadelphia, PA",      lat: 39.9526, lng: -75.1652 }
+    - { name: "Cherry Hill, NJ",       lat: 39.9348, lng: -75.0307 }
+    - { name: "King of Prussia, PA",   lat: 40.0893, lng: -75.3960 }
+    - { name: "Conshohocken, PA",      lat: 40.0793, lng: -75.3018 }
+    - { name: "Mount Laurel, NJ",      lat: 39.9340, lng: -74.8910 }
+    - { name: "Voorhees, NJ",          lat: 39.8487, lng: -74.9543 }
+    - { name: "Washington Twp, NJ",    lat: 39.7551, lng: -75.0743 }
+    - { name: "Moorestown, NJ",        lat: 39.9687, lng: -74.9490 }
+    - { name: "Princeton, NJ",         lat: 40.3573, lng: -74.6672 }
+    - { name: "Wilmington, DE",        lat: 39.7391, lng: -75.5398 }
+    - { name: "Newark, DE",            lat: 39.6837, lng: -75.7497 }
+    - { name: "Media, PA",             lat: 39.9168, lng: -75.3877 }
+    - { name: "Bensalem, PA",          lat: 40.1023, lng: -74.9513 }
+    - { name: "Malvern, PA",           lat: 40.0362, lng: -75.5138 }
+    - { name: "Marlton, NJ",           lat: 39.8912, lng: -74.9218 }
+
+# ---------------------------------------------------------------------------
+# Scoring: which properties are worth a personalized email.
+# Weights are summed then normalized to 0-100.
+# ---------------------------------------------------------------------------
+scoring:
+  min_score_to_contact: 45
+  weights:
+    unit_count: 30          # more doors = more buyers at the window
+    proximity: 20           # closer = cheaper to serve, easier to repeat
+    portfolio_size: 20      # multi-property managers = one yes, many dates
+    event_signal: 15        # site mentions resident events / food trucks
+    rating_volume: 10       # a busy, engaged community
+    contactability: 5       # we actually have a named human + email
+  unit_count_bands:         # doors -> raw points (0-1 scale before weighting)
+    - { min_units: 400, points: 1.00 }
+    - { min_units: 250, points: 0.85 }
+    - { min_units: 150, points: 0.65 }
+    - { min_units: 80,  points: 0.40 }
+    - { min_units: 0,   points: 0.15 }
+  # Properties below this door count are skipped entirely -- not enough
+  # residents to clear the sales guarantee.
+  hard_min_units: 60
+
+# ---------------------------------------------------------------------------
+# Calendar: which open dates we pitch.
+# ---------------------------------------------------------------------------
+calendar:
+  calendar_id: "c_2n2l67crk1luucoaibv0lcoaek@group.calendar.google.com"  # grill-e-vents
+  timezone: "America/New_York"
+  # Resident dinner vending works best midweek.
+  preferred_weekdays: [1, 2, 3]     # Tue, Wed, Thu (Mon=0)
+  lead_time_days: 21                # don't pitch dates sooner than this
+  horizon_days: 120                 # how far out to look for gaps
+  slots_to_offer: 3                 # concrete dates named in each email
+  # Treat a day as unavailable if any event overlaps this local window.
+  block_start_local: "15:00"
+  block_end_local: "21:30"
+
+# ---------------------------------------------------------------------------
+# Outreach cadence & guardrails.
+# ---------------------------------------------------------------------------
+outreach:
+  # HARD DEFAULT: nothing sends unless the CLI is given --live.
+  dry_run_default: true
+  daily_send_cap: 40
+  per_domain_daily_cap: 3
+  # Local-time window in which sends are allowed.
+  send_window_start_local: "08:30"
+  send_window_end_local: "17:00"
+  send_weekdays: [0, 1, 2, 3, 4]
+  # Sequence: template -> days after the previous step.
+  steps:
+    - { key: "intro",     template: "01_intro.md",     delay_days: 0 }
+    - { key: "bump",      template: "02_bump.md",      delay_days: 4 }
+    - { key: "proof",     template: "03_proof.md",     delay_days: 7 }
+    - { key: "close",     template: "04_close.md",     delay_days: 9 }
+  # Any inbound reply from the domain stops the whole sequence.
+  stop_on_reply: true
+  # Never contact these (competitors, past no's, personal addresses).
+  suppression_file: "config/suppression.txt"
+
+# ---------------------------------------------------------------------------
+# HubSpot wiring -- real IDs from portal 6451718.
+# ---------------------------------------------------------------------------
+hubspot:
+  portal_id: 6451718
+  owner_id: 39259222
+  pipeline: "default"                  # Event Quote Pipeline
+  stage_new: "24115343"                # Vending Request
+  stage_contacted: "24115342"          # Vending Request - contacted
+  stage_replied: "3319407"             # Client Responded to GC with Questions
+  stage_booked: "decisionmakerboughtin"  # Booked the Event
+  deal_name_prefix: "Resident Vending"
