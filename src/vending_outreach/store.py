@@ -8,13 +8,13 @@ before anything leaves the mailbox.
 from __future__ import annotations
 
 import json
-import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable, Iterator, Optional
+from typing import Any, Iterable, Iterator, Mapping, Optional
 
 from .config import REPO_ROOT
+from .db import DB, POSTGRES
 from .models import Contact, OutreachState, Property
 
 DEFAULT_DB = REPO_ROOT / "data" / "outreach.sqlite3"
@@ -89,19 +89,30 @@ def utcnow() -> str:
 
 
 class Store:
-    def __init__(self, path: str | Path = DEFAULT_DB):
+    """Persistence. Backed by Postgres when DATABASE_URL is set (Replit
+    deployments), otherwise a local SQLite file."""
+
+    def __init__(self, path: str | Path = DEFAULT_DB, dsn: str = ""):
         self.path = Path(path)
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.conn = sqlite3.connect(self.path)
-        self.conn.row_factory = sqlite3.Row
+        self.conn = DB(dsn=dsn, sqlite_path=self.path)
         self.conn.executescript(SCHEMA)
         self.conn.commit()
+
+    @property
+    def backend(self) -> str:
+        return self.conn.backend
+
+    @property
+    def location(self) -> str:
+        if self.conn.backend == POSTGRES:
+            return self.conn.describe
+        return f"{self.conn.describe}: {self.path}"
 
     def close(self) -> None:
         self.conn.close()
 
     @contextmanager
-    def tx(self) -> Iterator[sqlite3.Connection]:
+    def tx(self) -> Iterator[DB]:
         try:
             yield self.conn
             self.conn.commit()
@@ -161,6 +172,12 @@ class Store:
         if where:
             sql += f" WHERE {where}"
         return [_row_to_property(r) for r in self.conn.execute(sql, tuple(params))]
+
+    def is_enriched(self, key: str) -> bool:
+        row = self.conn.execute(
+            "SELECT enriched_at FROM properties WHERE key = ?", (key,)
+        ).fetchone()
+        return bool(row and row["enriched_at"])
 
     def properties_needing_enrichment(self, limit: int = 500) -> list[Property]:
         return self.properties("enriched_at IS NULL LIMIT ?", (limit,))
@@ -237,7 +254,7 @@ class Store:
             (status, note, email.lower()),
         )
 
-    def due_outreach(self, now_iso: str, limit: int = 200) -> list[sqlite3.Row]:
+    def due_outreach(self, now_iso: str, limit: int = 200) -> list[Mapping[str, Any]]:
         """Contacts whose next sequence step is ready to go out."""
         return list(self.conn.execute(
             """
@@ -283,20 +300,23 @@ class Store:
         return row["c"]
 
     def counts(self) -> dict[str, int]:
-        q = lambda sql: self.conn.execute(sql).fetchone()[0]
+        def q(where: str) -> int:
+            # Aliased so the value reads the same from sqlite3.Row and a dict.
+            return self.conn.execute(f"SELECT COUNT(*) AS n FROM {where}").fetchone()["n"]
+
         return {
-            "properties": q("SELECT COUNT(*) FROM properties"),
-            "enriched": q("SELECT COUNT(*) FROM properties WHERE enriched_at IS NOT NULL"),
-            "scored": q("SELECT COUNT(*) FROM properties WHERE score > 0"),
-            "contacts": q("SELECT COUNT(*) FROM contacts"),
-            "in_sequence": q("SELECT COUNT(*) FROM outreach WHERE status='in_sequence'"),
-            "replied": q("SELECT COUNT(*) FROM outreach WHERE status='replied'"),
-            "booked": q("SELECT COUNT(*) FROM outreach WHERE status='booked'"),
-            "emails_out": q("SELECT COUNT(*) FROM sends WHERE mode IN ('sent','draft')"),
+            "properties": q("properties"),
+            "enriched": q("properties WHERE enriched_at IS NOT NULL"),
+            "scored": q("properties WHERE score > 0"),
+            "contacts": q("contacts"),
+            "in_sequence": q("outreach WHERE status='in_sequence'"),
+            "replied": q("outreach WHERE status='replied'"),
+            "booked": q("outreach WHERE status='booked'"),
+            "emails_out": q("sends WHERE mode IN ('sent','draft')"),
         }
 
 
-def _row_to_property(row: sqlite3.Row) -> Property:
+def _row_to_property(row: Mapping[str, Any]) -> Property:
     return Property(
         key=row["key"], name=row["name"], address=row["address"] or "",
         city=row["city"] or "", state=row["state"] or "",
@@ -312,7 +332,7 @@ def _row_to_property(row: sqlite3.Row) -> Property:
     )
 
 
-def _row_to_contact(row: sqlite3.Row) -> Contact:
+def _row_to_contact(row: Mapping[str, Any]) -> Contact:
     return Contact(
         property_key=row["property_key"], email=row["email"],
         first_name=row["first_name"] or "", last_name=row["last_name"] or "",

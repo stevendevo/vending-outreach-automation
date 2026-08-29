@@ -9,26 +9,13 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-export PYTHONPATH=src
 PY=${PYTHON:-python3}
 MODE=${MODE:-draft}
 LOG_DIR=data/logs
 mkdir -p "$LOG_DIR"
 LOG="$LOG_DIR/$(date +%Y-%m-%d).log"
 
-run() {
-  echo "--- $* ---" | tee -a "$LOG"
-  "$PY" -m vending_outreach "$@" 2>&1 | tee -a "$LOG"
-}
-
-# Widen the top of the funnel a little each day rather than all at once, so the
-# Places bill and the crawl load stay predictable.
-run discover
-run enrich --limit 150
-run score
-run queue --limit 60
-run outreach --mode "$MODE" --limit 40
-run sync --limit 40
-run report
+# `daily` runs the whole pass and keeps going if one stage fails.
+"$PY" main.py daily --mode "$MODE" 2>&1 | tee -a "$LOG"
 
 echo "Done. Log: $LOG"

@@ -13,13 +13,14 @@ import argparse
 import csv
 import json
 import logging
+import os
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from .config import REPO_ROOT, Config
-from .crm.hubspot import HubSpotClient, sync_property
+from .crm import ActivityPayload, build_hubspot, build_primary, lead_from
 from .discovery.places import run_discovery
 from .enrich.website import compute_portfolio_sizes, run_enrichment
 from .models import Contact, Property, property_key
@@ -194,24 +195,139 @@ def cmd_outreach(args, cfg: Config, store: Store) -> int:
 
 
 def cmd_sync(args, cfg: Config, store: Store) -> int:
-    cfg.secrets.require("hubspot_token")
-    client = HubSpotClient(cfg.secrets.hubspot_token)
-    props = store.properties(
-        "score >= ? ORDER BY score DESC LIMIT ?",
-        (args.min_score or cfg.scoring["min_score_to_contact"], args.limit),
-    )
-    synced = 0
+    """Push scored targets into the primary CRM, optionally mirroring contacts
+    into HubSpot."""
+    primary = build_primary(cfg, store, preview=args.preview)
+    mirror = None
+    if not args.preview and not args.no_hubspot:
+        mirror = build_hubspot(
+            cfg, store,
+            contacts_only=cfg.raw["crm"]["hubspot"].get("contacts_only", True))
+
+    if primary is None and mirror is None:
+        print("No CRM sink configured -- nothing synced.\n"
+              "  Primary: set the CRM_BASE_URL and CRM_API_TOKEN secrets "
+              "(crm.primary is "
+              f"'{cfg.raw.get('crm', {}).get('primary', 'none')}').\n"
+              "  Or run `sync --preview` to see the payload contract first.")
+        return 1
+
+    min_score = args.min_score if args.min_score is not None \
+        else cfg.scoring["min_score_to_contact"]
+    props = store.properties("score >= ? ORDER BY score DESC LIMIT ?",
+                             (min_score, args.limit))
+    if not props:
+        print("Nothing at or above the score threshold to sync.")
+        return 0
+
+    if args.preview:
+        print(f"Previewing {len(props)} lead(s). Nothing is sent.\n"
+              f"This is the payload contract your CRM endpoint needs to accept.")
+
+    synced = errors = 0
     for prop in props:
+        contacts = store.contacts_for(prop.key)
+        lead = lead_from(prop, contacts[0] if contacts else None, cfg)
         try:
-            res = sync_property(client, cfg, store, prop, create_deal=not args.no_deals)
+            if primary is not None:
+                primary.upsert_lead(lead)
+            if mirror is not None:
+                mirror.upsert_lead(lead)
             synced += 1
-            print(f"  {prop.score:>3}  {prop.name[:44]:<44} company={res['company_id']} "
-                  f"deal={res['deal_id'] or '-'}")
+            if not args.preview:
+                print(f"  {prop.score:>3}  {prop.name[:50]}")
         except Exception as exc:
+            errors += 1
             log.error("Sync failed for %s: %s", prop.name, exc)
-    print(f"\nSynced {synced}/{len(props)} properties to HubSpot portal "
-          f"{cfg.hubspot['portal_id']}.")
+
+    dest = primary.name if primary else "hubspot"
+    print(f"\nSynced {synced}/{len(props)} to {dest}"
+          + (f" ({errors} failed)" if errors else ""))
+    if args.preview:
+        print("\nHand the payloads above to whoever builds the CRM endpoint.")
     return 0
+
+
+def cmd_doctor(args, cfg: Config, store: Store) -> int:
+    from .preflight import render, run_checks
+
+    checks = run_checks(cfg)
+    print(render(checks, cfg))
+    print(f"  Store: {store.location}")
+    counts = store.counts()
+    print(f"  Rows:  {counts['properties']} properties, "
+          f"{counts['contacts']} contacts, {counts['emails_out']} emails out")
+    print()
+    blocking = [c for c in checks if not c.ok]
+    return 1 if blocking and args.strict else 0
+
+
+def cmd_auth(args, cfg: Config, store: Store) -> int:
+    from .authflow import mint_refresh_token, render_instructions
+    from .preflight import on_replit
+
+    if on_replit():
+        print("This command opens a browser, so it cannot run on Replit.\n"
+              "Run it on your laptop, then paste the three values into "
+              "Replit Secrets.")
+        return 1
+    print("Opening a browser to authorize Gmail + Calendar access...")
+    print(f"Sign in as {cfg.secrets.sender_email or 'your Grilly Cheese address'}.\n")
+    print(render_instructions(mint_refresh_token(cfg)))
+    return 0
+
+
+def cmd_daily(args, cfg: Config, store: Store) -> int:
+    """One full pass. This is what the Replit Scheduled Deployment runs."""
+    from .preflight import render, run_checks
+
+    checks = run_checks(cfg)
+    print(render(checks, cfg))
+    if any(not c.ok for c in checks if c.name == "DATABASE_URL"):
+        log.warning("Running without a persistent database -- state will be "
+                    "lost between runs.")
+
+    steps: list[tuple[str, callable]] = []
+    if cfg.secrets.places_api_key and not args.skip_discovery:
+        steps.append(("discover", lambda: run_discovery(cfg, store)))
+    steps += [
+        ("enrich", lambda: run_enrichment(store, limit=args.enrich_limit)),
+        ("portfolios", lambda: {"groups": compute_portfolio_sizes(store)}),
+        ("score", lambda: run_scoring(cfg, store)),
+        ("queue", lambda: {"queued": enqueue_candidates(cfg, store,
+                                                        limit=args.queue_limit)}),
+    ]
+
+    for name, fn in steps:
+        print(f"\n=== {name} ===")
+        try:
+            print(json.dumps(fn(), indent=2, default=str))
+        except (Exception, SystemExit) as exc:
+            # SystemExit is not an Exception; a stage that bails must not take
+            # the whole scheduled run (and its report) down with it.
+            log.error("%s failed: %s", name, exc)
+            if args.strict:
+                return 1
+
+    print(f"\n=== outreach ({args.mode}) ===")
+    outreach_args = argparse.Namespace(
+        mode=args.mode, limit=args.outreach_limit, show_bodies=False,
+        offline=False, ignore_window=args.ignore_window)
+    try:
+        cmd_outreach(outreach_args, cfg, store)
+    except (Exception, SystemExit) as exc:
+        log.error("outreach failed: %s", exc)
+
+    print("\n=== sync ===")
+    sync_args = argparse.Namespace(limit=args.outreach_limit, min_score=None,
+                                   preview=False, no_hubspot=False)
+    try:
+        cmd_sync(sync_args, cfg, store)
+    except (Exception, SystemExit) as exc:
+        log.error("sync failed: %s", exc)
+
+    print("\n=== report ===")
+    return cmd_report(argparse.Namespace(), cfg, store)
 
 
 def cmd_report(args, cfg: Config, store: Store) -> int:
@@ -336,11 +452,32 @@ def build_parser() -> argparse.ArgumentParser:
                    help="send outside the configured business-hours window")
     o.set_defaults(func=cmd_outreach)
 
-    sy = sub.add_parser("sync", help="push properties/contacts/deals into HubSpot")
+    sy = sub.add_parser("sync", help="push targets into the CRM")
     sy.add_argument("--limit", type=int, default=50)
     sy.add_argument("--min-score", type=int, default=None)
-    sy.add_argument("--no-deals", action="store_true")
+    sy.add_argument("--preview", action="store_true",
+                    help="print the JSON payloads instead of sending them")
+    sy.add_argument("--no-hubspot", action="store_true",
+                    help="skip the secondary HubSpot contact mirror")
     sy.set_defaults(func=cmd_sync)
+
+    dr = sub.add_parser("doctor", help="check credentials and environment")
+    dr.add_argument("--strict", action="store_true",
+                    help="exit non-zero if anything is missing")
+    dr.set_defaults(func=cmd_doctor)
+
+    au = sub.add_parser("auth", help="mint a Google refresh token for Replit Secrets")
+    au.set_defaults(func=cmd_auth)
+
+    da = sub.add_parser("daily", help="one full pass (the Scheduled Deployment entrypoint)")
+    da.add_argument("--mode", choices=["dry-run", "draft", "live"], default="draft")
+    da.add_argument("--enrich-limit", type=int, default=150)
+    da.add_argument("--queue-limit", type=int, default=60)
+    da.add_argument("--outreach-limit", type=int, default=40)
+    da.add_argument("--skip-discovery", action="store_true")
+    da.add_argument("--ignore-window", action="store_true")
+    da.add_argument("--strict", action="store_true")
+    da.set_defaults(func=cmd_daily)
 
     r = sub.add_parser("report", help="pipeline status")
     r.set_defaults(func=cmd_report)
@@ -364,7 +501,8 @@ def main(argv: list[str] | None = None) -> int:
         format="%(levelname)s %(name)s: %(message)s",
     )
     cfg = Config.load(args.config)
-    store = Store(args.db)
+    # DATABASE_URL (Replit Postgres) wins over the local SQLite path.
+    store = Store(args.db, dsn=os.getenv("DATABASE_URL", ""))
     try:
         return args.func(args, cfg, store)
     finally:

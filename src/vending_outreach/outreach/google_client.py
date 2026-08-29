@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import base64
 import logging
+import os
 from email.mime.text import MIMEText
 from pathlib import Path
 from typing import Optional
@@ -26,7 +27,39 @@ SCOPES = [
 ]
 
 
+def credentials_from_env() -> Optional[Credentials]:
+    """Build credentials straight from environment secrets.
+
+    This is the path Replit uses. A Scheduled Deployment is headless and has an
+    ephemeral filesystem, so there is no browser to open and no token file that
+    survives to the next run. Instead the refresh token is minted once (see
+    `vending-outreach auth`) and stored as a Replit Secret.
+    """
+    client_id = os.getenv("GOOGLE_OAUTH_CLIENT_ID", "")
+    client_secret = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET", "")
+    refresh_token = os.getenv("GOOGLE_OAUTH_REFRESH_TOKEN", "")
+    if not (client_id and client_secret and refresh_token):
+        return None
+    creds = Credentials(
+        token=None,
+        refresh_token=refresh_token,
+        client_id=client_id,
+        client_secret=client_secret,
+        token_uri="https://oauth2.googleapis.com/token",
+        scopes=SCOPES,
+    )
+    # A refresh token alone has no access token; mint one now so a bad secret
+    # fails here with a clear message rather than deep inside a send.
+    creds.refresh(Request())
+    return creds
+
+
 def get_credentials(client_secrets: str, token_cache: str) -> Credentials:
+    # Environment secrets win: that is how deployments are configured.
+    env_creds = credentials_from_env()
+    if env_creds:
+        return env_creds
+
     cache = Path(token_cache)
     creds: Optional[Credentials] = None
     if cache.exists():
@@ -39,9 +72,22 @@ def get_credentials(client_secrets: str, token_cache: str) -> Credentials:
         secrets = Path(client_secrets)
         if not secrets.exists():
             raise SystemExit(
-                f"Google OAuth client secrets not found at {secrets}.\n"
-                "Create a Desktop-app OAuth client in Google Cloud, download the "
-                "JSON, and point GOOGLE_OAUTH_CLIENT_SECRETS at it."
+                f"No Google credentials.\n\n"
+                f"On Replit, set these three Secrets:\n"
+                f"  GOOGLE_OAUTH_CLIENT_ID\n"
+                f"  GOOGLE_OAUTH_CLIENT_SECRET\n"
+                f"  GOOGLE_OAUTH_REFRESH_TOKEN\n"
+                f"Run `python -m vending_outreach auth` on a machine with a "
+                f"browser to mint the refresh token.\n\n"
+                f"Locally, put a Desktop-app OAuth client JSON at {secrets} "
+                f"or point GOOGLE_OAUTH_CLIENT_SECRETS at it."
+            )
+        if os.getenv("REPLIT_DEPLOYMENT") or os.getenv("REPL_ID"):
+            # run_local_server would hang forever waiting on a browser callback.
+            raise SystemExit(
+                "Refusing to start a browser OAuth flow on Replit.\n"
+                "Set GOOGLE_OAUTH_REFRESH_TOKEN (plus CLIENT_ID/CLIENT_SECRET) "
+                "as Secrets instead -- see `python -m vending_outreach auth`."
             )
         flow = InstalledAppFlow.from_client_secrets_file(str(secrets), SCOPES)
         creds = flow.run_local_server(port=0)

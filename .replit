@@ -1,0 +1,75 @@
+# Replit project config for the Grilly Cheese vending outreach pipeline.
+#
+# The green Run button does a safe dry run: it discovers, enriches, scores and
+# renders emails, but sends nothing. Sending is a deliberate choice made in the
+# Scheduled Deployment below.
+
+run = ["python", "main.py", "daily", "--mode", "dry-run"]
+entrypoint = "main.py"
+modules = ["python-3.11"]
+
+[env]
+PYTHONPATH = "${REPL_HOME}/src"
+PYTHONUNBUFFERED = "1"
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+# Scheduled Deployment entrypoint. Set the schedule in the Deployments pane --
+# weekday mornings around 8:30am ET is the intent behind the send window in
+# config.yaml.
+#
+# Mode is `draft`: every email is staged in Gmail for review rather than sent.
+# Change to `live` only once the copy has earned it.
+run = ["python", "main.py", "daily", "--mode", "draft"]
+deploymentTarget = "scheduled"
+
+[[ports]]
+localPort = 8080
+externalPort = 80
+
+[workflows]
+runButton = "Dry run"
+
+[[workflows.workflow]]
+name = "Dry run"
+mode = "sequential"
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py daily --mode dry-run"
+
+[[workflows.workflow]]
+name = "Check setup"
+mode = "sequential"
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py doctor"
+
+[[workflows.workflow]]
+name = "Open dates"
+mode = "sequential"
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py slots"
+
+[[workflows.workflow]]
+name = "Preview CRM payloads"
+mode = "sequential"
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py sync --preview --limit 3"
+
+[[workflows.workflow]]
+name = "Stage drafts in Gmail"
+mode = "sequential"
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python main.py daily --mode draft"
+
+[[workflows.workflow]]
+name = "Tests"
+mode = "sequential"
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m pytest tests/ -q"

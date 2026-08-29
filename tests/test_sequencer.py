@@ -8,7 +8,7 @@ from vending_outreach.config import Config
 from vending_outreach.models import Contact, OutreachState, Property
 from vending_outreach.outreach.sequencer import (
     Sequencer, SendBlocked, enqueue_candidates, within_send_window)
-from vending_outreach.store import Store, utcnow
+from vending_outreach.store import utcnow
 
 
 class FakeGoogle:
@@ -41,13 +41,6 @@ class FakeGoogle:
 @pytest.fixture
 def cfg():
     return Config.load()
-
-
-@pytest.fixture
-def store(tmp_path):
-    s = Store(tmp_path / "t.sqlite3")
-    yield s
-    s.close()
 
 
 def seed(store, email="leasing@bigcommunity.com", score=80, units=400):

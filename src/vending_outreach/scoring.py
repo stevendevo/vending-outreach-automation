@@ -128,9 +128,7 @@ def run_scoring(cfg: Config, store) -> dict[str, int]:
             stats["too_small"] += 1
             continue
         has_contact = bool(store.contacts_for(prop.key))
-        enriched = store.conn.execute(
-            "SELECT enriched_at FROM properties WHERE key = ?", (prop.key,)
-        ).fetchone()[0] is not None
+        enriched = store.is_enriched(prop.key)
         score, reasons = score_property(prop, cfg, has_contact, enriched)
         store.update_property(prop.key, score=score, score_reasons=reasons)
         stats["scored"] += 1

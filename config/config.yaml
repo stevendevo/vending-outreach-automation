@@ -122,7 +122,37 @@ outreach:
   suppression_file: "config/suppression.txt"
 
 # ---------------------------------------------------------------------------
+# Where records land.
+#
+# The primary CRM is the Replit-hosted backend that sits alongside
+# grillycheese.net. HubSpot is kept only as a contact archive.
+#
+# The endpoints and field_map below are the contract this tool expects. Adjust
+# them to match what the CRM actually exposes -- `sync --preview` prints the
+# exact JSON that would be POSTed, which is the spec to build against.
+# ---------------------------------------------------------------------------
+crm:
+  primary: replit          # replit | hubspot | none
+
+  replit:
+    # Prefer the CRM_BASE_URL / CRM_API_TOKEN Replit Secrets over these.
+    base_url: ""
+    auth_scheme: bearer    # bearer | raw
+    auth_header: "Authorization"
+    endpoints:
+      upsert_lead: "POST /api/crm/leads"
+      log_activity: "POST /api/crm/activities"
+    # Rename our neutral field names onto the CRM's own. Left empty, the names
+    # in `sync --preview` are sent as-is.
+    field_map: {}
+
+  hubspot:
+    enabled: true
+    contacts_only: true    # people only -- no companies, deals or pipeline
+
+# ---------------------------------------------------------------------------
 # HubSpot wiring -- real IDs from portal 6451718.
+# Only used when crm.primary is "hubspot" or contacts are mirrored across.
 # ---------------------------------------------------------------------------
 hubspot:
   portal_id: 6451718

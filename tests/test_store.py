@@ -1,14 +1,6 @@
 import pytest
 
 from vending_outreach.models import Contact, Property
-from vending_outreach.store import Store
-
-
-@pytest.fixture
-def store(tmp_path):
-    s = Store(tmp_path / "t.sqlite3")
-    yield s
-    s.close()
 
 
 def test_rediscovery_does_not_duplicate(store):

@@ -238,3 +238,53 @@ def sync_property(client: HubSpotClient, cfg: Config, store,
     store.conn.commit()
     return {"company_id": company_id, "deal_id": deal_id,
             "contact_ids": ",".join(contact_ids)}
+
+
+class HubSpotAdapter:
+    """HubSpot as a secondary contact store.
+
+    HubSpot is no longer the primary CRM for Grilly Cheese -- it is kept as a
+    contact archive. In `contacts_only` mode this writes people and nothing
+    else: no companies, no deals, no pipeline movement.
+    """
+    name = "hubspot"
+
+    def __init__(self, client: HubSpotClient, cfg: Config, store,
+                 contacts_only: bool = True):
+        self.client = client
+        self.cfg = cfg
+        self.store = store
+        self.contacts_only = contacts_only
+
+    def upsert_lead(self, lead) -> str:
+        owner_id = str(self.cfg.hubspot["owner_id"])
+        if self.contacts_only:
+            if not lead.contact_email:
+                return ""
+            contact = Contact(
+                property_key=lead.external_id, email=lead.contact_email,
+                first_name=lead.contact_first_name, last_name=lead.contact_last_name,
+                title=lead.contact_title,
+            )
+            contact_id = self.client.upsert_contact(contact, "", owner_id)
+            self.store.update_contact(contact.email, hubspot_contact_id=contact_id)
+            self.store.conn.commit()
+            return contact_id
+
+        prop = self.store.get_property(lead.external_id)
+        if prop is None:
+            return ""
+        return sync_property(self.client, self.cfg, self.store, prop)["company_id"]
+
+    def log_activity(self, activity) -> str:
+        if self.contacts_only:
+            return ""      # timeline lives in the primary CRM now
+        contact_id = ""
+        row = self.store.conn.execute(
+            "SELECT hubspot_contact_id FROM contacts WHERE email = ?",
+            (activity.contact_email.lower(),),
+        ).fetchone()
+        if row:
+            contact_id = row["hubspot_contact_id"] or ""
+        body = f"{activity.subject}\n\n{activity.body}"
+        return self.client.log_note(body, contact_id=contact_id)
