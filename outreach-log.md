@@ -13,3 +13,18 @@
 - **Blockers:**
   - HubSpot was not updated. Its connector requires Steven's approval for every CRM write, and nobody was present to approve during the scheduled run. To fix, Steven can say "skip HubSpot confirmations for this chat" in the session, or approve a batch there.
   - The Donna Bleiler draft mentions "this weekend's" Plymouth Meeting block party (9/26). Edit that line if it's sent after Saturday.
+
+## 2026-09-24 (scheduled run, handled in this session)
+
+- **Handoff check:** no claude.ai routine yet, so this session is still running the job.
+- **Service area:** no changes. No new calendar locations since yesterday.
+- **Prospects added:** 13.
+  - 7 drafted: Carnegie Center (BXP, Director Kristen Reda); Brandywine 3000 Market St; Associa Mid-Atlantic HOA management (Branch President); AVE King of Prussia, Blue Bell, Malvern and Navy Yard.
+  - 4 queued for later runs so AVE communities aren't all emailed on one day: AVE Horsham, Blue Bell Villas, AVE Somerset, AVE Union.
+  - 2 to call: RCP Management, Princeton Forrestal Village.
+  - Donna Bleiler (Brandywine) is also the leasing contact for East Gate Corporate Center in Mount Laurel. That's noted for her follow-up.
+- **Gmail drafts created:** 7 initial, 0 follow-ups. None of the 9/23 drafts have been sent yet, so no follow-ups are due.
+- **Replies needing attention:** none.
+- **Blockers:**
+  - HubSpot still needs Steven's approval for CRM writes.
+  - 14 outreach drafts are now waiting for review in Gmail.
