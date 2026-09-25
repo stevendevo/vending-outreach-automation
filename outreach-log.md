@@ -32,3 +32,16 @@
 ## 2026-09-25 (fix requested by Steven)
 - Removed the typed sign-off and signature from the 13 unsent outreach drafts, because Steven's Gmail signature already adds it. Templates and routine instructions now say to leave the signature off.
 - The AVE Navy Yard email had already been sent (9/25), so it went out with the duplicate signature. Status updated to sent.
+
+## 2026-09-25 (scheduled run, handled in this session)
+
+- **Handoff check:** no claude.ai routine yet.
+- **Sent by Steven overnight:** 9 emails: Zamir/Laurel Corporate Center, Cherrywood, Carnegie Center, Brandywine 3000 Market, Associa, and AVE King of Prussia, Blue Bell, Malvern and Navy Yard. Follow-up #1 is due around 10/2 for any with no reply.
+- **REPLY needing attention:** Kristen Reda at Carnegie Center (BXP) replied that she's forwarding to Julie Corrigan, BXP Marketing Coordinator, who handles BXP events. Marked replied; no draft written.
+- **Other:** Jesse Bittencourt at Associa sent an out-of-office auto-reply (back 9/25). Not a real reply.
+- **Prospects added:** 2 offices: SFA's Woodland Falls Corporate Center (Cherry Hill) and Keystone Property Group.
+- **Drafts created:** 6 initial, 0 follow-ups: SFA Woodland Falls, Keystone, AVE Horsham, Blue Bell Villas, AVE Somerset, AVE Union. All without a typed signature.
+- **Still unsent from 9/23:** Steve Mattson, Allison Mens, Donna Bleiler, Keith Oldt, Kathy Sweeney-Pogwist.
+- **Blockers:**
+  - HubSpot still needs Steven's approval for CRM writes.
+  - Only 2 new prospects had published emails today; many apartment sites only have contact forms.
