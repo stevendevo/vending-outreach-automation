@@ -28,3 +28,7 @@
 - **Blockers:**
   - HubSpot still needs Steven's approval for CRM writes.
   - 14 outreach drafts are now waiting for review in Gmail.
+
+## 2026-09-25 (fix requested by Steven)
+- Removed the typed sign-off and signature from the 13 unsent outreach drafts, because Steven's Gmail signature already adds it. Templates and routine instructions now say to leave the signature off.
+- The AVE Navy Yard email had already been sent (9/25), so it went out with the duplicate signature. Status updated to sent.
