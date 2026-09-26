@@ -80,3 +80,6 @@
 - **Drafts:** deleted 4 (Malvern, Carnegie, Associa, Mattson). Steven declined deleting the other 10, which are now duplicates of sent emails and must not be sent again: Mens, Donna, Keith, Kathy, SFA, Keystone, Horsham, Blue Bell Villas, Somerset, Union.
 - **Aberdeen, MD 10/8:** still happening, arranged outside BFT (per Steven). The calendar entry stays.
 - **Next follow-ups:** 10/5 for the 11 first emails, if no reply.
+
+## 2026-09-26 (cleanup)
+- Deleted the 10 duplicate drafts left behind after the send, at Steven's request. No campaign drafts are left in Gmail.
