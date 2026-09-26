@@ -45,3 +45,15 @@
 - **Blockers:**
   - HubSpot still needs Steven's approval for CRM writes.
   - Only 2 new prospects had published emails today; many apartment sites only have contact forms.
+
+## 2026-09-26 (scheduled run, handled in this session)
+
+- **Handoff check:** no claude.ai routine yet.
+- **Replies:**
+  - **AVE King of Prussia wants to book.** Blair Graeber (Leasing Manager) asked for Wed Oct 14, 4–7pm. The grill-e-vents, main and BFT calendars are all open that day. A reply draft is in the thread: it confirms the date, states the $1,050 deposit refunded at $2,100, and asks about parking, headcount and COI. Nothing sent, nothing put on the calendar.
+  - **AVE Malvern:** Remi Scullin asked for menus, and Steven sent them on 9/25. Waiting on them.
+  - **Carnegie Center:** passed to Julie Corrigan (BXP Marketing). Waiting.
+- **Draft edits:** Donna Bleiler's draft now says "we were just in Plymouth Meeting" (the block party was 9/26) and adds East Gate Corporate Center in Mount Laurel.
+- **Prospects added:** 0. Greystar Marlton, Ingerman, Plymouth Pointe and Eagle Rock have no published emails.
+- **Drafts waiting:** 12 outreach drafts plus 1 booking reply. The booking reply goes first.
+- **Blockers:** HubSpot still needs Steven's approval for CRM writes.
