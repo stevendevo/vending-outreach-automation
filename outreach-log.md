@@ -57,3 +57,8 @@
 - **Prospects added:** 0. Greystar Marlton, Ingerman, Plymouth Pointe and Eagle Rock have no published emails.
 - **Drafts waiting:** 12 outreach drafts plus 1 booking reply. The booking reply goes first.
 - **Blockers:** HubSpot still needs Steven's approval for CRM writes.
+
+## 2026-09-26 (policy change from Steven)
+- **Decision:** apartment/HOA and office-park vending has **no minimum and no cost to the property.** The $1,050 deposit is gone from the landing page, one-pager, templates, routine instructions and README.
+- **Why:** the 10 emails already sent present vending as free for the property. The first reply draft to AVE King of Prussia added the $1,050 deposit after they'd said yes, which contradicted those emails.
+- **Drafts fixed:** the Blair Graeber (AVE King of Prussia) reply was recreated in her thread without the minimum. The Steve Mattson draft no longer quotes the minimum.

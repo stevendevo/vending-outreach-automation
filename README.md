@@ -14,4 +14,4 @@ Daily outreach campaign that gets the **Grilly Cheese** food truck booked for ve
 | `routine/SETUP.md` | How to create the claude.ai routine and wire the website backend to trigger it |
 | `backend/trigger-outreach.js` | Node/Express helper so grillycheese.net can fire the routine |
 
-**Rules the routine follows:** Gmail drafts only (Steven reviews and sends). It only uses emails published on official pages or found in real past correspondence, never guessed ones. The only vending terms it quotes are the $1,050 deposit, fully refunded at $2,100 in gross sales.
+**Rules the routine follows:** Gmail drafts only (Steven reviews and sends). It only uses emails published on official pages or found in real past correspondence, never guessed ones. Apartment and office-park vending has no minimum and no cost to the property, and the drafts never mention a deposit.

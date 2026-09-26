@@ -5,7 +5,7 @@ Written in Steven's voice. Plain text. Fill in the `{placeholders}`, keep each e
 Rules:
 - Only state facts from the website or real bookings. Mention a nearby town we've served only when that's true (see `service-area.md`).
 - Refer to past clients by type and town ("an apartment community in Eagleville"), not by name, unless they've agreed to be a reference.
-- The only vending terms to quote: a $1,050 guaranteed-minimum sales deposit, fully refunded once gross sales reach $2,100.
+- Apartment/HOA and office-park vending has **no minimum and no cost to the property** (decided 2026-09-26). Never mention a deposit, minimum or sales guarantee to these prospects.
 
 ## Signature
 
