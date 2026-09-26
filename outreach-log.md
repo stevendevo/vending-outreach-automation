@@ -65,3 +65,10 @@
 
 ## 2026-09-26 (booking)
 - **AVE King of Prussia is on the grill-e-vents calendar:** Wed Oct 14, 4–7pm, 555 S Goddard Blvd, King of Prussia. Vending with no minimum. Status changed to booked. The confirmation reply to Blair is still a draft in Gmail.
+
+## 2026-09-26 (follow-ups to responders, requested by Steven)
+- **AVE Malvern (Remi Scullin, cc J. Quinn and S. Buccino):** draft reply in the thread offers Oct 13, 15 or 21, 4–7pm (all open on grill-e-vents), cites the AVE King of Prussia booking, and says there's no cost to the property.
+- **Carnegie Center (Kristen Reda):** draft thanks her and asks for Julie Corrigan's email or a cc. Julie's address isn't known, and I won't guess it.
+- **Associa (Jesse Bittencourt):** he only sent an out-of-office reply. Draft is a light nudge now that he's back.
+- **AVE King of Prussia:** no follow-up. Steven replied to Blair on 9/26, so we're waiting on her answers.
+- **Noticed:** the Best Food Trucks Aberdeen, MD event (Oct 8) is still on grill-e-vents, but Gmail shows Steven cancelled it on 9/10.
