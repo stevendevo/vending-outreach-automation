@@ -62,3 +62,6 @@
 - **Decision:** apartment/HOA and office-park vending has **no minimum and no cost to the property.** The $1,050 deposit is gone from the landing page, one-pager, templates, routine instructions and README.
 - **Why:** the 10 emails already sent present vending as free for the property. The first reply draft to AVE King of Prussia added the $1,050 deposit after they'd said yes, which contradicted those emails.
 - **Drafts fixed:** the Blair Graeber (AVE King of Prussia) reply was recreated in her thread without the minimum. The Steve Mattson draft no longer quotes the minimum.
+
+## 2026-09-26 (booking)
+- **AVE King of Prussia is on the grill-e-vents calendar:** Wed Oct 14, 4–7pm, 555 S Goddard Blvd, King of Prussia. Vending with no minimum. Status changed to booked. The confirmation reply to Blair is still a draft in Gmail.
