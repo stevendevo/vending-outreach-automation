@@ -72,3 +72,11 @@
 - **Associa (Jesse Bittencourt):** he only sent an out-of-office reply. Draft is a light nudge now that he's back.
 - **AVE King of Prussia:** no follow-up. Steven replied to Blair on 9/26, so we're waiting on her answers.
 - **Noticed:** the Best Food Trucks Aberdeen, MD event (Oct 8) is still on grill-e-vents, but Gmail shows Steven cancelled it on 9/10.
+
+## 2026-09-26 (sent at Steven's request)
+- **Sent 14 emails from Gmail through the API.** The API doesn't add the Gmail signature, so each email includes Steven's standard signature text (no logo image).
+  - Follow-ups in existing threads: AVE Malvern (Remi, cc J. Quinn and S. Buccino), Carnegie (Kristen Reda), Associa (Jesse Bittencourt).
+  - First emails: Steve Mattson, Allison Mens, Donna Bleiler, Keith Oldt, Kathy Sweeney-Pogwist, SFA Woodland Falls, Keystone, AVE Horsham, Blue Bell Villas, AVE Somerset, AVE Union.
+- **Drafts:** deleted 4 (Malvern, Carnegie, Associa, Mattson). Steven declined deleting the other 10, which are now duplicates of sent emails and must not be sent again: Mens, Donna, Keith, Kathy, SFA, Keystone, Horsham, Blue Bell Villas, Somerset, Union.
+- **Aberdeen, MD 10/8:** still happening, arranged outside BFT (per Steven). The calendar entry stays.
+- **Next follow-ups:** 10/5 for the 11 first emails, if no reply.

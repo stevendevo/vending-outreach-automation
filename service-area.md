@@ -34,7 +34,7 @@ PA: Philadelphia; Bucks, Chester, Delaware, Montgomery counties.
 DE: Wilmington, Dover.
 
 ## Excluded for vending
-- **Aberdeen, MD**: a Best Food Trucks vending gig on 10/8/26 was cancelled as "outside of our travel territory for vending gigs" (Gmail, 9/10/26).
+- **Aberdeen, MD**: the Best Food Trucks listing for 10/8/26 was cancelled as "outside of our travel territory for vending gigs" (Gmail, 9/10/26), but Steven says the event is still happening, arranged directly outside BFT. Still not a target area for cold vending outreach.
 - NYC, Long Island, Baltimore, DC: catering only, case by case. Not vending outreach targets.
 
 ## Proof points for pitches
