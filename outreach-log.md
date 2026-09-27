@@ -91,3 +91,7 @@
 - **Updated Allison Mens** (existing contact 1072801): Lead Status changed from New to Attempted to contact, and linked to Morgan Properties.
 - **Phone-only prospects** (Bishop's View, Place One, The Neil, Dwell, RCP, Forrestal) exist only at the company level. No contact records.
 - **Going forward:** the daily run adds new prospects to HubSpot the same way.
+
+## 2026-09-27 (rule from Steven)
+- **The Grilly CRM comes first.** Every outreach email and reply BCCs crm@grillycheese.net, and the Grilly CRM is updated before HubSpot. Added to the routine instructions and email templates.
+- **Backfill:** the 20 contacts emailed 9/23 to 9/26 were not BCC'd to crm@, so the Grilly CRM probably doesn't have them yet. Waiting on Steven to choose how to backfill.
