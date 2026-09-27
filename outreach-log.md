@@ -83,3 +83,11 @@
 
 ## 2026-09-26 (cleanup)
 - Deleted the 10 duplicate drafts left behind after the send, at Steven's request. No campaign drafts are left in Gmail.
+
+## 2026-09-27 (HubSpot sync, approved by Steven; confirmations waived for this chat)
+- **Created 9 companies:** Brandywine Realty Trust, Zamir Equities, Korman Residential at Cherrywood, BXP - Carnegie Center, Associa Mid-Atlantic, Strategic Funding Alternatives (Woodland Falls), The Klein Company - Dwell Cherry Hill, RCP Management, Princeton Forrestal Village.
+- **Reused existing companies:** Morgan Properties, AVE, Davis Enterprises, Keystone Development + Investment.
+- **Created 19 contacts, all linked to their companies.** Lead Status is Attempted to contact, or Connected for Kristen Reda, Blair Graeber and Remi Scullin.
+- **Updated Allison Mens** (existing contact 1072801): Lead Status changed from New to Attempted to contact, and linked to Morgan Properties.
+- **Phone-only prospects** (Bishop's View, Place One, The Neil, Dwell, RCP, Forrestal) exist only at the company level. No contact records.
+- **Going forward:** the daily run adds new prospects to HubSpot the same way.
