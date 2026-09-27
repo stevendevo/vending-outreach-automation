@@ -95,3 +95,4 @@
 ## 2026-09-27 (rule from Steven)
 - **The Grilly CRM comes first.** Every outreach email and reply BCCs crm@grillycheese.net, and the Grilly CRM is updated before HubSpot. Added to the routine instructions and email templates.
 - **Backfill:** the 20 contacts emailed 9/23 to 9/26 were not BCC'd to crm@, so the Grilly CRM probably doesn't have them yet. Waiting on Steven to choose how to backfill.
+- **Backfill done (9/27):** forwarded 20 outreach threads to crm@grillycheese.net, one per contact, each with a one-line CRM note (contact, property, phone, status). Whether they landed depends on the Gmail to CRM bridge running, which isn't verified. Steven should check Ops CRM, Contacts.
