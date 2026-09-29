@@ -96,3 +96,12 @@
 - **The Grilly CRM comes first.** Every outreach email and reply BCCs crm@grillycheese.net, and the Grilly CRM is updated before HubSpot. Added to the routine instructions and email templates.
 - **Backfill:** the 20 contacts emailed 9/23 to 9/26 were not BCC'd to crm@, so the Grilly CRM probably doesn't have them yet. Waiting on Steven to choose how to backfill.
 - **Backfill done (9/27):** forwarded 20 outreach threads to crm@grillycheese.net, one per contact, each with a one-line CRM note (contact, property, phone, status). Whether they landed depends on the Gmail to CRM bridge running, which isn't verified. Steven should check Ops CRM, Contacts.
+
+## 2026-09-28 to 2026-09-29 (auto mode safety-classifier outage, then catch-up)
+- **9/28 run:** the platform's action-approval classifier was down for the whole run. Could not draft, push, or query triggers. No prospects were due for follow-up that day anyway.
+- **9/29 run (catch-up):** classifier recovered.
+  - Drafted the Julie Corrigan (BXP, jcorrigan@bxp.com) email Kristen provided on 9/28.
+  - **AVE King of Prussia confirmed further:** Molly Boughman (GM) locked in Oct 14, said no COI is needed, parking is by the clubhouse (cones reserved), ~50-60 residents expected, and it's paired with a Puppy Pool Party. She asked for a logo and menu for the flyer. Reply draft links the public logo (grillycheese.net/grilly-cheese-logo.webp) and the site's /menu page rather than attaching files.
+  - **AVE Malvern:** Jasmine Quinn (Senior Leasing Manager) said October is fully booked and asked for November instead. Reply draft agrees and asks for a preferred week.
+  - No other follow-ups were due (earliest remaining is 10/2).
+- **Blockers:** none now; classifier is back.
