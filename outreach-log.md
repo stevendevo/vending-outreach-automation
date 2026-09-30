@@ -152,3 +152,9 @@
 - REPLY NEEDING ATTENTION: Brandywine - Anthony Rossi (Tenant Experience Manager, anthony.rossi@bdnreit.com) replied 9/29 via Keith Oldt intro, wants menu + pricing, covers all suburban buildings. A draft reply already existed in Gmail (created 9/30 08:50, not by this routine); labeled it "Vending Outreach". WARNING: that draft states a $750 minimum on the Full Menu, which conflicts with the no-minimum rule for vending. Steven to review before sending. Other Brandywine follow-ups held.
 - Research: added 1 prospect (Ingerman, phone-only; no published email found). New research yield low today; no new outreach drafts created.
 - Blockers: none.
+
+## 2026-09-30 (check-in: updates, calendar, replies)
+- BXP Carnegie Center: Julie Corrigan replied 9/30 (asking management about a November pop-up). Created labeled reply draft (cc Kristen Reda, BCC crm@). Status -> replied.
+- Correction: the Brandywine draft (Anthony Rossi) quotes no guarantee on the Simple Menu and a $750 minimum only on Full/breakfast menus, so it is not necessarily wrong - Steven to confirm.
+- Calendar: AVE King of Prussia 10/14 4-7pm already on grill-e-vents. No November hold yet for AVE Malvern or BXP (dates not agreed). PBTC 10/13 lunch still unconfirmed (no calendar entry; time unknown).
+- Unsent drafts for Steven: AVE KOP (Molly), AVE Malvern (Jasmine), Brandywine (Anthony Rossi), BXP (Julie).
