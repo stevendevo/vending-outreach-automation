@@ -124,3 +124,11 @@
 - Opt-out line added to every template in `templates/emails.md`: "If you'd rather not hear from us again, just reply and let me know — no hard feelings." An opt-out reply sets status=do_not_contact and stops all future contact.
 - Still drafted, never auto-sent: any reply to an inbound message, anything touching a booking/date/price/logistics, any contact who has ever replied, and inbound website leads.
 - `routine/prompt.md` STEP 4 and `templates/emails.md` updated accordingly; `README.md` reflects the new sending policy.
+
+## 2026-09-30 (reverted to drafts-only + Gmail label, requested by Steven)
+
+- **Reverted auto-send.** Steven asked to make sure emails are only ever created as drafts. `routine/prompt.md` STEP 4 is rewritten: create_draft/update_draft only, `send_message` is explicitly forbidden, no exceptions, no daily cap or business-hours logic needed since nothing sends itself anymore. `templates/emails.md` and `README.md` updated to match. Removed the AUTO-SEND RULES block entirely.
+- **New Gmail label: "Vending Outreach"** (Label_38, orange) to make campaign emails easy to spot in Gmail. Applied it to:
+  - The 2 drafts currently waiting (Molly Boughman/AVE KOP reply, Jasmine Quinn/AVE Malvern reply).
+  - All 20 campaign threads sent 9/23-9/29 (first-touch emails, follow-ups, CRM-log forwards, and the replies inside those threads). Old unrelated threads to the same companies from 2019-2024 were left alone.
+- **Going forward:** every draft the routine creates gets this label right after `create_draft` (and again after any `update_draft`, since editing a draft returns a new message ID). This is now written into `routine/prompt.md` STEP 4.

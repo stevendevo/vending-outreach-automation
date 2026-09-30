@@ -2,7 +2,7 @@
 
 Written in Steven's voice. Plain text. Fill in the `{placeholders}`, keep each email short, and include one ask.
 
-**Auto-send (decided 2026-09-30):** first-touch and follow-up #1/#2 emails below send automatically, subject to the cap and hours in `routine/prompt.md`. Any reply to a prospect who wrote back is still drafted for Steven, never auto-sent.
+**Drafts only (2026-09-30):** every email below is created as a Gmail draft, tagged with the "Vending Outreach" label, and left for Steven to review and send himself. Nothing is ever auto-sent.
 
 Rules:
 - Only state facts from the website or real bookings. Mention a nearby town we've served only when that's true (see `service-area.md`).
