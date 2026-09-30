@@ -18,3 +18,5 @@ Daily outreach campaign that gets the **Grilly Cheese** food truck booked for ve
 **Rules the routine follows:** It only uses emails published on official pages or found in real past correspondence, never guessed ones. Apartment and office-park vending has no minimum and no cost to the property, and outreach never mentions a deposit.
 
 **Sending (as of 2026-09-30):** Gmail drafts only — the routine never sends email on its own. Every draft (first-touch, both follow-ups, and every reply) is BCC'd to crm@grillycheese.net, ends with an opt-out line, and gets the **"Vending Outreach"** Gmail label so it's easy to find and tell apart from Steven's other mail. He reviews and sends each one himself.
+
+`assets/brandywine-vending-menus.pdf` is the 3-page vending menu sent to Brandywine (Standard Lunch: no guarantee; Full Menu and Breakfast: $750 guaranteed sales per visit). Note this differs from the apartment/office-park "no minimum" rule; use it only where Steven chooses to.
