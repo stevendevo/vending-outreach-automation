@@ -139,3 +139,9 @@
 ## 2026-09-30 (dashboard)
 - Built mobile prospect dashboard (dashboard/index.html, Artifact https://claude.ai/artifact/UHdtMLtD6nsysRTQnmDeUE). Data source: prospects.csv (26 prospects: 1 booked, 1 replied, 18 sent, 6 to call).
 - Corrected Julie Corrigan / BXP Carnegie Center to status=sent (sent 9/29); follow-up #1 due 10/6.
+
+## 2026-09-30 (past-client import)
+- Imported 13 past clients from the grill-e-vents calendar and Gmail into prospects.csv with status=past_client (10 offices/companies, 2 apartment/community, 1 more): Philadelphia Business & Technology Center, URBN, Grupo Bimbo, Power Home Remodeling, Penske Automotive, Rhoads Industries, LaborFirst (Laurel Corporate Center), Asher's Chocolate, BI, Eagleville hospital, Kirkbride Center, Arrive at Valley Forge, Ridings of Woolwich.
+- Emails only where they appear in real Gmail threads; others need a Gmail lookup before re-engagement (template C).
+- Skipped as outside the core vending area or not a business: Roseland NJ, Bethlehem PA, Washington NJ, Budd Lake NJ, Jersey City, schools, private parties.
+- Not yet in Grilly CRM/HubSpot; no emails drafted.

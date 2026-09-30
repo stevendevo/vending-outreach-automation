@@ -6,7 +6,7 @@
 :root{
   --bg:#0e0d0c; --surface:#1a1816; --surface2:#25221f; --line:#332f2b;
   --fg:#f6f1ea; --muted:#a39a90; --accent:#ff7a1a; --on-accent:#140b02;
-  --s-call:#e8b23a; --s-sent:#8f9aa8; --s-replied:#4fa3ff; --s-booked:#3ecf8e; --s-dnc:#ef5b5b;
+  --s-call:#e8b23a; --s-sent:#8f9aa8; --s-replied:#4fa3ff; --s-booked:#3ecf8e; --s-dnc:#ef5b5b; --s-past:#b58cff;
   --font-display:"Barlow Condensed","Arial Narrow",sans-serif;
   --font-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:dark;
@@ -14,12 +14,12 @@
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
   --bg:#f7f3ee; --surface:#ffffff; --surface2:#efe8df; --line:#ded4c8;
   --fg:#1c1712; --muted:#6b6157; --accent:#e5620a; --on-accent:#ffffff;
-  --s-call:#a97a00; --s-sent:#5d6875; --s-replied:#1a6fd1; --s-booked:#12905c; --s-dnc:#c93030;
+  --s-call:#a97a00; --s-sent:#5d6875; --s-replied:#1a6fd1; --s-booked:#12905c; --s-dnc:#c93030; --s-past:#7a48d6;
   color-scheme:light}}
 :root[data-theme="light"]{
   --bg:#f7f3ee; --surface:#ffffff; --surface2:#efe8df; --line:#ded4c8;
   --fg:#1c1712; --muted:#6b6157; --accent:#e5620a; --on-accent:#ffffff;
-  --s-call:#a97a00; --s-sent:#5d6875; --s-replied:#1a6fd1; --s-booked:#12905c; --s-dnc:#c93030;
+  --s-call:#a97a00; --s-sent:#5d6875; --s-replied:#1a6fd1; --s-booked:#12905c; --s-dnc:#c93030; --s-past:#7a48d6;
   color-scheme:light}
 :root[data-theme="dark"]{color-scheme:dark}
 
@@ -43,11 +43,11 @@ header .asof{font-size:12px;color:var(--muted);text-align:right}
 .next .what b{display:block;font-size:17px}
 .next .what span{font-size:13px;opacity:.85}
 
-.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 6px 9px;text-align:center;display:flex;flex-direction:column;gap:2px;position:relative;overflow:hidden}
 .stage::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--c)}
-.stage .num{font-size:34px;line-height:1}
-.stage .lbl{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.stage .num{font-size:30px;line-height:1}
+.stage .lbl{font-size:10px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
 .stage[aria-pressed="true"]{border-color:var(--accent);background:var(--surface2)}
 .bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface2);gap:2px}
 .bar i{display:block;background:var(--c);min-width:4px}
@@ -145,7 +145,8 @@ const STAGES = [
   {k:"to_call", label:"To call", c:"var(--s-call)"},
   {k:"sent", label:"Sent", c:"var(--s-sent)"},
   {k:"replied", label:"Replied", c:"var(--s-replied)"},
-  {k:"booked", label:"Booked", c:"var(--s-booked)"}
+  {k:"booked", label:"Booked", c:"var(--s-booked)"},
+  {k:"past_client", label:"Past client", c:"var(--s-past)"}
 ];
 const STAGE = Object.fromEntries(STAGES.map(s=>[s.k,s]));
 STAGE.inbound = {k:"inbound", label:"Inbound", c:"var(--s-replied)"};
@@ -291,7 +292,7 @@ function renderChips(){
 }
 
 // ---------- list ----------
-const ORDER = {booked:0, replied:1, drafted:2, inbound:2, to_call:3, sent:4, do_not_contact:9};
+const ORDER = {booked:0, replied:1, drafted:2, inbound:2, to_call:3, sent:4, past_client:6, do_not_contact:9};
 function copy(text, btn){
   const done = ()=>{ const o=btn.textContent; btn.textContent="Copied"; setTimeout(()=>btn.textContent=o,1200); };
   try{ navigator.clipboard.writeText(text).then(done,()=>{}); }catch(e){}
