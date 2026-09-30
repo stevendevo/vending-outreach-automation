@@ -91,6 +91,15 @@ h2 .count{font:600 12px var(--font-body);background:var(--accent);color:var(--on
 .row .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:44px;flex:none}
 .row .v{min-width:0;overflow-wrap:anywhere;user-select:all}
 .mini{border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;background:var(--surface2);color:var(--fg);text-decoration:none}
+.sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);color:var(--fg);width:100%;max-width:560px;max-height:85%;overflow-y:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;border-top:3px solid var(--accent)}
+.sheet h3{font:700 22px var(--font-display);text-transform:uppercase;letter-spacing:.03em;margin:0;overflow-wrap:anywhere}
+.sheet .sub{font-size:13px;color:var(--muted);margin-top:-8px}
+.sheet .btns{display:flex;gap:8px;flex-wrap:wrap}
+.big{flex:1 1 140px;text-align:center;border-radius:12px;padding:13px 12px;font-weight:600;background:var(--accent);color:var(--on-accent);text-decoration:none}
+.big.alt{background:var(--surface2);color:var(--fg);border:1px solid var(--line)}
+.sheet .sec{font:600 11px var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sheet .item{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
 .empty{color:var(--muted);text-align:center;padding:24px 0}
 .foot{font-size:12px;color:var(--muted);text-align:center}
 @media (prefers-reduced-motion:no-preference){.card,.stage,.chip{transition:border-color .15s,background .15s}}
@@ -197,6 +206,50 @@ function renderStages(){
   $("repLbl").textContent = responded+" of "+contacted+" contacted have responded";
 }
 
+function buildDetail(p){
+  const detail = el("div","detail");
+  detail.appendChild(el("div","step",p.next_step||"No next step"));
+  const c = el("div","contact");
+  if(p.contact_name) c.appendChild(contactRow("Who", p.contact_name+(p.title?" · "+p.title:"")));
+  if(p.email) c.appendChild(contactRow("Email", p.email, "mailto:"+p.email));
+  if(p.phone) c.appendChild(contactRow("Phone", p.phone, "tel:"+p.phone.replace(/[^\d+]/g,"")));
+  if(p.source_url && p.source_url.startsWith("http")){
+    const r = el("div","row"); r.append(el("span","k","Source")); const a = el("a","mini","Open page"); a.href=p.source_url; a.target="_blank"; r.appendChild(a); c.appendChild(r);
+  }
+  detail.appendChild(c);
+  if(p.last_touch) detail.appendChild(el("div","note","Last touch "+fmt(parseD(p.last_touch)||today)));
+  if(p.notes) detail.appendChild(el("div","note",p.notes));
+  return detail;
+}
+const GMAIL = "https://mail.google.com/mail/u/0/#label/Vending+Outreach";
+function openSheet(it){
+  closeSheet();
+  const bg = el("div","sheetbg"); bg.id="sheet";
+  bg.onclick = e=>{ if(e.target===bg) closeSheet(); };
+  const sh = el("div","sheet");
+  sh.appendChild(el("h3",null,it.p? it.p.property : it.t));
+  sh.appendChild(el("div","sub", it.p? it.p.organization+" · "+it.p.town+", "+it.p.state : it.sub));
+  const btns = el("div","btns");
+  if(it.p && it.p.status!=="to_call"){
+    const g = el("a","big","Open Gmail drafts"); g.href=GMAIL; g.target="_blank"; btns.appendChild(g);
+  }
+  if(it.p && it.p.phone){ const a = el("a","big alt","Call "+it.p.phone); a.href="tel:"+it.p.phone.replace(/[^\d+]/g,""); btns.appendChild(a); }
+  const x = el("button","big alt","Close"); x.onclick = closeSheet; btns.appendChild(x);
+  sh.appendChild(btns);
+  if(it.p){
+    const d = buildDetail(it.p); d.style.cssText="padding:0;border:0"; sh.appendChild(d);
+  } else {
+    sh.appendChild(el("div","sec","Tap to see details"));
+    DATA.filter(p=>p.status===it.filter).forEach(p=>{
+      const i = el("div","item"); i.appendChild(el("b",null,p.property+" · "+p.town));
+      const d = buildDetail(p); d.style.cssText="padding:0;border:0"; i.appendChild(d); sh.appendChild(i);
+    });
+  }
+  bg.appendChild(sh); document.body.appendChild(bg);
+}
+function closeSheet(){ const b=$("sheet"); if(b) b.remove(); }
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
+
 // ---------- needs you ----------
 function renderActions(){
   const box = $("actions"); box.replaceChildren();
@@ -217,13 +270,7 @@ function renderActions(){
     b.append(el("span","dot"));
     const t = el("span","t"); t.append(el("b",null,it.t), el("span",null,it.sub)); b.appendChild(t);
     b.appendChild(el("span","when",it.when));
-    b.onclick = ()=>{
-      if(it.filter){ stageFilter = it.filter; }
-      else { stageFilter = null; segFilter="all"; }
-      query = it.p? it.p.property : ""; $("q").value = query;
-      renderStages(); renderChips(); renderList(it.p);
-      $("list").scrollIntoView({behavior:"smooth",block:"start"});
-    };
+    b.onclick = ()=>openSheet(it);
     box.appendChild(b);
   });
 }
@@ -280,18 +327,7 @@ function renderList(openP){
       const d = el("span","due"+(n<=3?" soon":""), n<=0?"Follow up now":"F/U "+fmt(p.due)); head.appendChild(d);
     }
     card.appendChild(head);
-    const detail = el("div","detail"); detail.hidden = true;
-    detail.appendChild(el("div","step",p.next_step||"No next step"));
-    const c = el("div","contact");
-    if(p.contact_name) c.appendChild(contactRow("Who", p.contact_name+(p.title?" · "+p.title:"")));
-    if(p.email) c.appendChild(contactRow("Email", p.email, "mailto:"+p.email));
-    if(p.phone) c.appendChild(contactRow("Phone", p.phone, "tel:"+p.phone.replace(/[^\d+]/g,"")));
-    if(p.source_url && p.source_url.startsWith("http")){
-      const r = el("div","row"); r.append(el("span","k","Source")); const a = el("a","mini","Open page"); a.href=p.source_url; a.target="_blank"; r.appendChild(a); c.appendChild(r);
-    }
-    detail.appendChild(c);
-    if(p.last_touch) detail.appendChild(el("div","note","Last touch "+fmt(parseD(p.last_touch)||today)));
-    if(p.notes) detail.appendChild(el("div","note",p.notes));
+    const detail = buildDetail(p); detail.hidden = true;
     card.appendChild(detail);
     head.onclick = ()=>{ const open = detail.hidden; detail.hidden = !open; head.setAttribute("aria-expanded",String(open)); };
     if(openP && openP===p){ detail.hidden=false; head.setAttribute("aria-expanded","true"); }
