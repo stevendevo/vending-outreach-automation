@@ -132,3 +132,6 @@
   - The 2 drafts currently waiting (Molly Boughman/AVE KOP reply, Jasmine Quinn/AVE Malvern reply).
   - All 20 campaign threads sent 9/23-9/29 (first-touch emails, follow-ups, CRM-log forwards, and the replies inside those threads). Old unrelated threads to the same companies from 2019-2024 were left alone.
 - **Going forward:** every draft the routine creates gets this label right after `create_draft` (and again after any `update_draft`, since editing a draft returns a new message ID). This is now written into `routine/prompt.md` STEP 4.
+
+## 2026-09-30 (standing instruction from Steven)
+- **Always check Gmail Sent, not just Drafts/inbox.** Steven's rule: "Always check the sent folder to see what's in the works, too." Added a check at the top of `routine/prompt.md` (before STEP 1) to search Sent every run, plus reinforced it in STEP 3 (dedup) and STEP 4 (follow-up timing), since Sent is the real record of what's gone out and Drafts only shows what's still waiting on Steven.
