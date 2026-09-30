@@ -255,9 +255,9 @@ document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
 function renderActions(){
   const box = $("actions"); box.replaceChildren();
   const items = [];
-  DATA.filter(p=>p.status==="booked"||p.status==="replied").forEach(p=>
-    items.push({p, t:"Send reply draft", sub:p.status==="booked"?"Confirm details for the booking · "+p.property:"Reply to "+p.property, when:"Now", c:"var(--s-replied)", w:0}));
-  DATA.filter(p=>p.due && p.status==="sent" && daysTo(p.due)<=3).sort((a,b)=>a.due-b.due).forEach(p=>{
+  DATA.filter(p=>/^STEVEN:/i.test(p.next_step||"")).forEach(p=>
+    items.push({p, t:"Send reply draft", sub:p.property+" · "+p.town, when:"Now", c:"var(--s-replied)", w:0}));
+  DATA.filter(p=>p.due && p.status==="sent" && !/^STEVEN:/i.test(p.next_step||"") && daysTo(p.due)<=3).sort((a,b)=>a.due-b.due).forEach(p=>{
     const n = daysTo(p.due);
     items.push({p, t:"Follow up: "+p.property, sub:p.organization+" · "+p.town, when:n<=0?"Due":"In "+n+"d", c:n<=0?"var(--s-dnc)":"var(--accent)", w:1+n});
   });
