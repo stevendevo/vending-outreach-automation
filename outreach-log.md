@@ -105,3 +105,22 @@
   - **AVE Malvern:** Jasmine Quinn (Senior Leasing Manager) said October is fully booked and asked for November instead. Reply draft agrees and asks for a preferred week.
   - No other follow-ups were due (earliest remaining is 10/2).
 - **Blockers:** none now; classifier is back.
+
+## 2026-09-30 (one-week check-in — switched to auto-send)
+
+**Week 1 recap (9/23–9/29):**
+- 26 prospects researched and added to `prospects.csv`; 20 had a verified published or known email, 6 phone/contact-form only.
+- 24 outreach emails went out this week across those 20 contacts (first-touch + follow-ups + replies). All but 2 are now sent; 2 reply drafts (AVE King of Prussia GM Molly Boughman, AVE Malvern's Jasmine Quinn) are still sitting unsent in Gmail as of this morning.
+- **Replies (3 of 20 contacted so far):**
+  - **AVE King of Prussia — booked.** Blair Graeber then GM Molly Boughman confirmed Wed Oct 14, 4-7pm, ~50-60 residents expected, no COI needed, paired with a Puppy Pool Party.
+  - **AVE Malvern — warm, pushed to November.** Remi Scullin asked for menus (sent); Jasmine Quinn said October is fully booked and asked for a November date. Reply drafted, not yet sent.
+  - **BXP/Carnegie Center — routed to the right person.** Kristen Reda forwarded us to Julie Corrigan (BXP events); first pitch to Julie sent 9/29.
+  - Associa Mid-Atlantic only sent an out-of-office auto-reply; the post-OOO nudge sent 9/26 has had no response yet.
+- **Edits along the way:** Steven had me (1) strip the duplicate signature out of drafts, (2) remove the $1,050 vending-minimum language site-wide after realizing the first batch of emails implied vending was free, (3) approve HubSpot writes in bulk rather than per-record, and (4) send the full backlog of drafts himself via a batch instruction rather than reviewing/sending each one individually in Gmail.
+
+**Decision:** Steven confirmed (2026-09-30) switching from Gmail-drafts-only to auto-send for first-touch and follow-up emails, with these safeguards:
+- Daily cap: 10 automatic sends/day.
+- Business hours only: Mon-Fri, 9am-5pm ET; outside that window everything is drafted instead of held.
+- Opt-out line added to every template in `templates/emails.md`: "If you'd rather not hear from us again, just reply and let me know — no hard feelings." An opt-out reply sets status=do_not_contact and stops all future contact.
+- Still drafted, never auto-sent: any reply to an inbound message, anything touching a booking/date/price/logistics, any contact who has ever replied, and inbound website leads.
+- `routine/prompt.md` STEP 4 and `templates/emails.md` updated accordingly; `README.md` reflects the new sending policy.

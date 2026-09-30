@@ -14,4 +14,6 @@ Daily outreach campaign that gets the **Grilly Cheese** food truck booked for ve
 | `routine/SETUP.md` | How to create the claude.ai routine and wire the website backend to trigger it |
 | `backend/trigger-outreach.js` | Node/Express helper so grillycheese.net can fire the routine |
 
-**Rules the routine follows:** Gmail drafts only (Steven reviews and sends). It only uses emails published on official pages or found in real past correspondence, never guessed ones. Apartment and office-park vending has no minimum and no cost to the property, and the drafts never mention a deposit.
+**Rules the routine follows:** It only uses emails published on official pages or found in real past correspondence, never guessed ones. Apartment and office-park vending has no minimum and no cost to the property, and outreach never mentions a deposit.
+
+**Sending (as of 2026-09-30):** first-touch emails and scheduled follow-ups (#1, #2) send automatically — up to 10/day, Mon-Fri 9am-5pm ET only, always BCC'd to crm@grillycheese.net, and always ending with an opt-out line. Anything that needs Steven's judgment stays a draft for him to review and send: replies from a prospect who wrote back, anything involving a booking/date/price, and inbound leads from the website. See `routine/prompt.md` (STEP 4) for the exact rules and exceptions.
