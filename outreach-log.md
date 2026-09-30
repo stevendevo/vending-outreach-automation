@@ -135,3 +135,7 @@
 
 ## 2026-09-30 (standing instruction from Steven)
 - **Always check Gmail Sent, not just Drafts/inbox.** Steven's rule: "Always check the sent folder to see what's in the works, too." Added a check at the top of `routine/prompt.md` (before STEP 1) to search Sent every run, plus reinforced it in STEP 3 (dedup) and STEP 4 (follow-up timing), since Sent is the real record of what's gone out and Drafts only shows what's still waiting on Steven.
+
+## 2026-09-30 (dashboard)
+- Built mobile prospect dashboard (dashboard/index.html, Artifact https://claude.ai/artifact/UHdtMLtD6nsysRTQnmDeUE). Data source: prospects.csv (26 prospects: 1 booked, 1 replied, 18 sent, 6 to call).
+- Corrected Julie Corrigan / BXP Carnegie Center to status=sent (sent 9/29); follow-up #1 due 10/6.

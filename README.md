@@ -10,6 +10,7 @@ Daily outreach campaign that gets the **Grilly Cheese** food truck booked for ve
 | `service-area.md` | Towns we serve, rebuilt from Google Calendar, Gmail and the website |
 | `prospects.csv` | Every prospect, with its source URL, status and next step (used to avoid duplicates) |
 | `outreach-log.md` | One entry per run |
+| `dashboard/` | Mobile dashboard of all prospects. `python3 dashboard/build.py` rebuilds `index.html` from `prospects.csv` (template in `template.html`) |
 | `routine/prompt.md` | The routine's instructions (daily schedule + API trigger) |
 | `routine/SETUP.md` | How to create the claude.ai routine and wire the website backend to trigger it |
 | `backend/trigger-outreach.js` | Node/Express helper so grillycheese.net can fire the routine |
