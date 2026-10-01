@@ -158,3 +158,10 @@
 - Correction: the Brandywine draft (Anthony Rossi) quotes no guarantee on the Simple Menu and a $750 minimum only on Full/breakfast menus, so it is not necessarily wrong - Steven to confirm.
 - Calendar: AVE King of Prussia 10/14 4-7pm already on grill-e-vents. No November hold yet for AVE Malvern or BXP (dates not agreed). PBTC 10/13 lunch still unconfirmed (no calendar entry; time unknown).
 - Unsent drafts for Steven: AVE KOP (Molly), AVE Malvern (Jasmine), Brandywine (Anthony Rossi), BXP (Julie).
+
+## 2026-10-01 (scheduled run, 12:05 UTC)
+- Handoff check: no other "vending outreach" routine; continuing.
+- Sent folder + inbox checked: no new sends since 9/29 and no new prospect replies. Four reply drafts still unsent in Gmail (label Vending Outreach): AVE King of Prussia (Molly), AVE Malvern (Jasmine), Brandywine (Anthony Rossi; needs the menu PDF attached), BXP (Julie Corrigan). Per Steven's rule these stay status=sent with "STEVEN:" next steps until the replies appear in Sent.
+- Follow-ups: none due today. Follow-up #1 batch is due 10/2 (Zamir, Cherrywood, AVE Blue Bell, AVE Navy Yard, Steve Rush/3000 Market) and 10/5 (Mattson, Mens, Bleiler, Sweeney-Pogwist, Horsham, Blue Bell Villas, Somerset, Union, SFA, Keystone). Brandywine follow-ups held while Anthony Rossi handles tenant events.
+- Research: added 3 Wilmington-area apartment managers (Foret, FirstService Residential, ResideBPG), all phone/contact-form only, status to_call. No new drafts.
+- Blockers: none.
