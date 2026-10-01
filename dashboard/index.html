@@ -1,0 +1,341 @@
+<title>Vending Pipeline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: one phone-width column. Sticky title, stage tiles that double as filters, an action list, then tappable prospect cards. Dark first (black + orange), light variant below. */
+:root{
+  --bg:#0e0d0c; --surface:#1a1816; --surface2:#25221f; --line:#332f2b;
+  --fg:#f6f1ea; --muted:#a39a90; --accent:#ff7a1a; --on-accent:#140b02;
+  --s-call:#e8b23a; --s-sent:#8f9aa8; --s-replied:#4fa3ff; --s-booked:#3ecf8e; --s-dnc:#ef5b5b; --s-past:#b58cff;
+  --font-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --font-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --bg:#f7f3ee; --surface:#ffffff; --surface2:#efe8df; --line:#ded4c8;
+  --fg:#1c1712; --muted:#6b6157; --accent:#e5620a; --on-accent:#ffffff;
+  --s-call:#a97a00; --s-sent:#5d6875; --s-replied:#1a6fd1; --s-booked:#12905c; --s-dnc:#c93030; --s-past:#7a48d6;
+  color-scheme:light}}
+:root[data-theme="light"]{
+  --bg:#f7f3ee; --surface:#ffffff; --surface2:#efe8df; --line:#ded4c8;
+  --fg:#1c1712; --muted:#6b6157; --accent:#e5620a; --on-accent:#ffffff;
+  --s-call:#a97a00; --s-sent:#5d6875; --s-replied:#1a6fd1; --s-booked:#12905c; --s-dnc:#c93030; --s-past:#7a48d6;
+  color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.4 var(--font-body);padding-inline:16px;padding-block:0 32px;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2{font-family:var(--font-display);font-weight:700;margin:0;text-transform:uppercase;letter-spacing:.03em}
+.num{font-family:var(--font-display);font-weight:700;font-variant-numeric:tabular-nums}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:14px 10px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+header h1{font-size:30px;line-height:1}
+header h1 span{color:var(--accent)}
+header .asof{font-size:12px;color:var(--muted);text-align:right}
+
+.next{background:var(--accent);color:var(--on-accent);border-radius:16px;padding:16px;display:flex;gap:16px;align-items:center}
+.next .days{font-size:56px;line-height:.9;min-width:72px;text-align:center}
+.next .days small{display:block;font:600 12px var(--font-body);letter-spacing:.08em;text-transform:uppercase}
+.next .what{min-width:0}
+.next .what b{display:block;font-size:17px}
+.next .what span{font-size:13px;opacity:.85}
+
+.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 6px 9px;text-align:center;display:flex;flex-direction:column;gap:2px;position:relative;overflow:hidden}
+.stage::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--c)}
+.stage .num{font-size:30px;line-height:1}
+.stage .lbl{font-size:10px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.stage[aria-pressed="true"]{border-color:var(--accent);background:var(--surface2)}
+.bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface2);gap:2px}
+.bar i{display:block;background:var(--c);min-width:4px}
+.barlegend{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+
+section{display:flex;flex-direction:column;gap:10px}
+h2{font-size:20px;display:flex;align-items:center;gap:8px}
+h2 .count{font:600 12px var(--font-body);background:var(--accent);color:var(--on-accent);border-radius:99px;padding:2px 8px;letter-spacing:0}
+
+.action{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left}
+.action .dot{width:10px;height:10px;border-radius:50%;background:var(--c);margin-top:5px;flex:none}
+.action .t{min-width:0;display:flex;flex-direction:column;gap:2px}
+.action .t b{font-weight:600}
+.action .t span{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.action .when{margin-left:auto;font:700 14px var(--font-display);letter-spacing:.04em;text-transform:uppercase;color:var(--c);white-space:nowrap;flex:none}
+
+.tools{display:flex;flex-direction:column;gap:10px}
+.search{width:100%;background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:inherit}
+.search::placeholder{color:var(--muted)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:8px 14px;font-weight:500;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card>button{width:100%;text-align:left;padding:13px 14px;display:flex;gap:12px;align-items:flex-start}
+.card .stripe{width:4px;align-self:stretch;border-radius:2px;background:var(--c);flex:none}
+.card .main{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.card .org{font-weight:600;font-size:16px;overflow-wrap:anywhere}
+.card .prop{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
+.card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;align-items:center}
+.pill{font:600 11px var(--font-body);letter-spacing:.06em;text-transform:uppercase;border-radius:99px;padding:3px 9px;color:var(--c);border:1px solid var(--c)}
+.tag{font-size:12px;color:var(--muted)}
+.due{font:700 13px var(--font-display);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:right;flex:none}
+.due.soon{color:var(--accent)}
+.detail{padding:0 14px 14px 30px;display:flex;flex-direction:column;gap:10px;border-top:1px dashed var(--line);padding-top:12px}
+.detail .step{font-weight:500}
+.detail .note{font-size:13px;color:var(--muted)}
+.contact{display:flex;flex-direction:column;gap:6px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.row .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:44px;flex:none}
+.row .v{min-width:0;overflow-wrap:anywhere;user-select:all}
+.mini{border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;background:var(--surface2);color:var(--fg);text-decoration:none}
+.sheetbg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);color:var(--fg);width:100%;max-width:560px;max-height:85%;overflow-y:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;border-top:3px solid var(--accent)}
+.sheet h3{font:700 22px var(--font-display);text-transform:uppercase;letter-spacing:.03em;margin:0;overflow-wrap:anywhere}
+.sheet .sub{font-size:13px;color:var(--muted);margin-top:-8px}
+.sheet .btns{display:flex;gap:8px;flex-wrap:wrap}
+.big{flex:1 1 140px;text-align:center;border-radius:12px;padding:13px 12px;font-weight:600;background:var(--accent);color:var(--on-accent);text-decoration:none}
+.big.alt{background:var(--surface2);color:var(--fg);border:1px solid var(--line)}
+.sheet .sec{font:600 11px var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.sheet .item{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.empty{color:var(--muted);text-align:center;padding:24px 0}
+.foot{font-size:12px;color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:no-preference){.card,.stage,.chip{transition:border-color .15s,background .15s}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Vending <span>Pipeline</span></h1>
+    <div class="asof" id="asof"></div>
+  </header>
+
+  <div class="next" id="next" hidden></div>
+
+  <section aria-label="Pipeline stages">
+    <div class="stages" id="stages"></div>
+    <div>
+      <div class="bar" id="bar" aria-hidden="true"></div>
+      <div class="barlegend"><span id="totalLbl"></span><span id="repLbl"></span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Needs you <span class="count" id="actCount"></span></h2>
+    <div id="actions" style="display:flex;flex-direction:column;gap:8px"></div>
+  </section>
+
+  <section>
+    <h2>Prospects</h2>
+    <div class="tools">
+      <input class="search" id="q" type="search" placeholder="Search property, town, contact" autocomplete="off">
+      <div class="chips" id="chips"></div>
+    </div>
+    <div id="list" style="display:flex;flex-direction:column;gap:10px"></div>
+  </section>
+
+  <div class="foot">Data: prospects.csv · updated by the daily outreach run</div>
+</div>
+
+<script>
+const DATA = [{"date_added": "2026-09-23", "segment": "apartments", "organization": "Morgan Properties", "property": "Community at 2803 Stanbridge St (300+ units)", "town": "East Norriton", "county": "Montgomery", "state": "PA", "contact_name": "Steve Mattson", "title": "", "email": "Steven.Mattson@morganproperties.com", "phone": "", "source_url": "Gmail: his web inquiry 2024-07-16", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": "WARM: asked in 2024 for a resident event where residents pay for themselves (vending) but was sent catering packages"}, {"date_added": "2026-09-23", "segment": "apartments", "organization": "Morgan Properties", "property": "The Villas at Bryn Mawr", "town": "Bryn Mawr", "county": "Montgomery", "state": "PA", "contact_name": "Allison Mens", "title": "Senior Property Manager (as of 2022)", "email": "amens@morganproperties.com", "phone": "610-525-2088", "source_url": "Gmail: thread Sep 2022", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": "WARM: 2022 booking fell through (truck down); may have changed roles"}, {"date_added": "2026-09-23", "segment": "offices", "organization": "Brandywine Realty Trust", "property": "Meetinghouse Business Center (2240/2250 Butler Pike) + 120 W Germantown Pike", "town": "Plymouth Meeting", "county": "Montgomery", "state": "PA", "contact_name": "Donna Bleiler", "title": "Leasing agent", "email": "Donna.Bleiler@bdnreit.com", "phone": "856-533-2815", "source_url": "https://www.brandywinerealty.com/property/22402250-butler-pike", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": "Leasing contact; asked for referral to tenant-events owner; also leasing contact for East Gate Corporate Center, Mount Laurel NJ (303 Fellowship Rd, 700 East Gate Dr) - mention in follow-up; Anthony Rossi (Tenant Experience Manager) now handles tenant events for all suburban buildings - hold follow-up #1 and route via him"}, {"date_added": "2026-09-23", "segment": "offices", "organization": "Brandywine Realty Trust", "property": "1 & 101 West Elm Street", "town": "Conshohocken", "county": "Montgomery", "state": "PA", "contact_name": "Keith Oldt", "title": "Leasing agent", "email": "keith.oldt@bdnreit.com", "phone": "215-619-4765", "source_url": "https://www.brandywinerealty.com/property/1-west-elm-street", "status": "sent", "last_touch": "2026-09-26", "next_step": "STEVEN: Anthony Rossi (anthony.rossi@bdnreit.com, 215-495-8373) asked for menu + pricing 9/29. Reply draft waiting in Gmail (attach the menu PDF) - review & send, then mark replied.", "notes": "Leasing contact; asked for referral; Existing draft offers Simple Menu with no guarantee and a $750 minimum only on Full/breakfast menu - confirm that's what you want to quote"}, {"date_added": "2026-09-23", "segment": "offices", "organization": "Brandywine Realty Trust", "property": "Radnor Corporate Center; Radnor Financial Center; Berwyn Park", "town": "Radnor / Berwyn", "county": "Delaware / Chester", "state": "PA", "contact_name": "Kathy Sweeney-Pogwist", "title": "Leasing agent", "email": "Kathy.Sweeney-Pogwist@bdnreit.com", "phone": "610-832-7743", "source_url": "https://www.brandywinerealty.com/property/one-radnor-corporate-center", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": "Also listed on /property/100-berwyn-park and /property/201-king-prussia-road; Anthony Rossi (Tenant Experience Manager) now handles tenant events for all suburban buildings - hold follow-up #1 and route via him"}, {"date_added": "2026-09-23", "segment": "offices", "organization": "Zamir Equities", "property": "Laurel Corporate Center (Midlantic Dr)", "town": "Mount Laurel", "county": "Burlington", "state": "NJ", "contact_name": "", "title": "", "email": "info@zamirequities.com", "phone": "212-277-6477", "source_url": "https://zamirequities.com/contact-us/", "status": "sent", "last_touch": "2026-09-25", "next_step": "Follow-up #1 on 2026-10-02 if no reply", "notes": "General inbox (NY HQ); campus has on-site PM and deli"}, {"date_added": "2026-09-23", "segment": "apartments", "organization": "Korman Residential", "property": "Korman Residential at Cherrywood", "town": "Clementon", "county": "Camden", "state": "NJ", "contact_name": "", "title": "Leasing office", "email": "Cherrywoodnj-w@m.knck.io", "phone": "856-644-6577", "source_url": "https://kormancherrywood.com/", "status": "sent", "last_touch": "2026-09-25", "next_step": "Follow-up #1 on 2026-10-02 if no reply", "notes": "Leasing CRM inbox; pool + community garden"}, {"date_added": "2026-09-23", "segment": "apartments", "organization": "Morgan Properties", "property": "Bishop's View Apartments & Townhomes", "town": "Cherry Hill", "county": "Camden", "state": "NJ", "contact_name": "", "title": "Leasing office", "email": "", "phone": "856-942-0211", "source_url": "https://www.morgan-properties.com/apartments/nj/cherry-hill/bishops-view/", "status": "to_call", "last_touch": "", "next_step": "Call leasing office; ask for community manager email", "notes": "Clubhouse + fire pit lounge; contact form only"}, {"date_added": "2026-09-23", "segment": "apartments", "organization": "Morgan Properties", "property": "Place One Apartment Homes", "town": "Plymouth Meeting", "county": "Montgomery", "state": "PA", "contact_name": "", "title": "Leasing office", "email": "", "phone": "844-378-7058", "source_url": "https://www.rentcafe.com/apartments/pa/plymouth-meeting/place-one-apartment-homes/default.aspx", "status": "to_call", "last_touch": "", "next_step": "Call; pair with Plymouth Meeting block party proof", "notes": "Clubhouse + fire pit lounge"}, {"date_added": "2026-09-23", "segment": "apartments", "organization": "Davis Enterprises", "property": "The Neil (+ Sagemore/Weston Club/Allison etc.)", "town": "Mount Laurel / Marlton", "county": "Burlington", "state": "NJ", "contact_name": "", "title": "Corporate office", "email": "", "phone": "856-985-1200", "source_url": "https://www.davisenterprises.com/the-neil", "status": "to_call", "last_touch": "", "next_step": "Call corporate (8000 Sagemore Dr Marlton) for portfolio-wide resident events", "notes": "7 South Jersey communities"}, {"date_added": "2026-09-23", "segment": "apartments", "organization": "The Klein Company", "property": "Dwell Cherry Hill", "town": "Cherry Hill", "county": "Camden", "state": "NJ", "contact_name": "", "title": "Leasing office", "email": "", "phone": "877-826-2205", "source_url": "https://www.dwellcherryhill.com/", "status": "to_call", "last_touch": "", "next_step": "Call leasing; clubhouse", "notes": "No email published"}, {"date_added": "2026-09-24", "segment": "offices", "organization": "BXP (Boston Properties)", "property": "Carnegie Center", "town": "Princeton", "county": "Mercer", "state": "NJ", "contact_name": "Julie Corrigan (via Kristen Reda)", "title": "Director", "email": "jcorrigan@bxp.com", "phone": "609-452-1444", "source_url": "https://carnegiecenter.com/", "status": "sent", "last_touch": "2026-09-29", "next_step": "STEVEN: Julie Corrigan replied 9/30 (will ask management about a November pop-up). Reply draft waiting in Gmail - review & send, then mark replied.", "notes": "19 buildings / 2.3M sf; greenways + amphitheater; SVP Leasing John Brandbergh (jbrandbergh@bxp.com) as backup"}, {"date_added": "2026-09-24", "segment": "offices", "organization": "Brandywine Realty Trust", "property": "3000 Market Street", "town": "Philadelphia", "county": "Philadelphia", "state": "PA", "contact_name": "Steve Rush", "title": "Leasing agent", "email": "steve.rush@bdnreit.com", "phone": "215-397-1562", "source_url": "https://www.brandywinerealty.com/property/3000-market-street", "status": "sent", "last_touch": "2026-09-25", "next_step": "Follow-up #1 on 2026-10-02 if no reply", "notes": "University City; secondary contact Ryan Sweeney (Ryan.Sweeney@bdnreit.com); Anthony Rossi (Tenant Experience Manager) now handles tenant events for all suburban buildings - hold follow-up #1 and route via him"}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Associa Mid-Atlantic (HOA management)", "property": "Portfolio (Mt. Laurel NJ / King of Prussia PA offices)", "town": "Mount Laurel / King of Prussia", "county": "Burlington / Montgomery", "state": "NJ/PA", "contact_name": "Jesse Bittencourt", "title": "Branch President", "email": "jbittencourt@associamidatlantic.com", "phone": "484-754-5737", "source_url": "https://www.associamidatlantic.com/", "status": "sent", "last_touch": "2026-09-26", "next_step": "Sent post-OOO nudge 9/26; final follow-up ~2026-10-07 if no reply", "notes": "HOA/condo manager; BD manager Joanne Granozio (joanne.granozio@associa.us) as backup; auto-reply: out of office until 9/25 (not a real reply)"}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Korman Communities (AVE)", "property": "AVE King of Prussia", "town": "King of Prussia", "county": "Montgomery", "state": "PA", "contact_name": "Blair Graeber", "title": "Leasing Manager", "email": "kingofprussia@aveliving.com", "phone": "484-206-5939", "source_url": "https://www.aveliving.com/locations/suburban-philadelphia/blue-bell", "status": "booked", "last_touch": "2026-09-29", "next_step": "STEVEN: Molly Boughman confirmed 10/14, ~50-60 residents, no COI needed, parking by clubhouse. Reply draft sends logo+menu links. Send it.", "notes": "Emails listed in AVE site community data"}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Korman Communities (AVE)", "property": "AVE Blue Bell", "town": "Blue Bell", "county": "Montgomery", "state": "PA", "contact_name": "", "title": "Leasing", "email": "abbgs@aveliving.com", "phone": "267-609-9435", "source_url": "https://www.aveliving.com/locations/suburban-philadelphia/blue-bell", "status": "sent", "last_touch": "2026-09-25", "next_step": "Follow-up #1 on 2026-10-02 if no reply", "notes": "Hosts wine hours + movie nights + resident appreciation"}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Korman Communities (AVE)", "property": "AVE Malvern", "town": "Malvern", "county": "Chester", "state": "PA", "contact_name": "Remi Scullin", "title": "Leasing", "email": "malvern@aveliving.com", "phone": "610-546-2920", "source_url": "https://www.aveliving.com/locations/suburban-philadelphia/blue-bell", "status": "sent", "last_touch": "2026-09-26", "next_step": "STEVEN: Jasmine Quinn asked to push to November (Oct is full). Reply draft waiting in Gmail - review & send, then mark replied.", "notes": ""}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Korman Communities (AVE)", "property": "AVE Navy Yard", "town": "Philadelphia", "county": "Philadelphia", "state": "PA", "contact_name": "", "title": "Leasing", "email": "navyyard@aveliving.com", "phone": "", "source_url": "https://www.aveliving.com/locations/suburban-philadelphia/blue-bell", "status": "sent", "last_touch": "2026-09-25", "next_step": "Follow-up #1 on 2026-10-02 if no reply", "notes": "Near URBN (served 9/16)"}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Korman Communities (AVE)", "property": "AVE Horsham", "town": "Horsham", "county": "Montgomery", "state": "PA", "contact_name": "", "title": "Leasing", "email": "horshamleasing@aveliving.com", "phone": "", "source_url": "https://www.aveliving.com/locations/suburban-philadelphia/blue-bell", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": ""}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Korman Communities (AVE)", "property": "Blue Bell Villas", "town": "Blue Bell", "county": "Montgomery", "state": "PA", "contact_name": "", "title": "Leasing", "email": "bluebellvillas@aveliving.com", "phone": "610-557-1071", "source_url": "https://www.aveliving.com/locations/suburban-philadelphia/blue-bell", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": "Townhomes"}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Korman Communities (AVE)", "property": "AVE Somerset", "town": "Somerset", "county": "Somerset", "state": "NJ", "contact_name": "", "title": "Leasing", "email": "somerset@aveliving.com", "phone": "732-624-6454", "source_url": "https://www.aveliving.com/locations/suburban-philadelphia/blue-bell", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": ""}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "Korman Communities (AVE)", "property": "AVE Union", "town": "Union", "county": "Union", "state": "NJ", "contact_name": "", "title": "Leasing", "email": "union@aveliving.com", "phone": "", "source_url": "https://www.aveliving.com/locations/suburban-philadelphia/blue-bell", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": ""}, {"date_added": "2026-09-24", "segment": "apartments", "organization": "RCP Management (HOA management)", "property": "Portfolio", "town": "Cranbury", "county": "Middlesex", "state": "NJ", "contact_name": "", "title": "Main office", "email": "", "phone": "609-683-7980", "source_url": "https://rcpmanagement.com/", "status": "to_call", "last_touch": "", "next_step": "Call; ask for community-events contact", "notes": "No email published"}, {"date_added": "2026-09-24", "segment": "offices", "organization": "Gale / Lincoln Equities", "property": "Princeton Forrestal Village", "town": "Plainsboro", "county": "Middlesex", "state": "NJ", "contact_name": "", "title": "Management office", "email": "", "phone": "609-737-7901", "source_url": "https://pfvillage.com/", "status": "to_call", "last_touch": "", "next_step": "Call management office", "notes": "Mixed-use office/retail campus"}, {"date_added": "2026-09-25", "segment": "offices", "organization": "Strategic Funding Alternatives (SFA)", "property": "Woodland Falls Corporate Center (200/210/220 Lake Dr E)", "town": "Cherry Hill", "county": "Camden", "state": "NJ", "contact_name": "", "title": "Leasing", "email": "leasing@sfalts.com", "phone": "856-437-6196", "source_url": "https://www.sfaofficespace.com/woodland", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": "218k sf, 3 buildings on a lake; owner based in Moorestown"}, {"date_added": "2026-09-25", "segment": "offices", "organization": "Keystone Property Group", "property": "Office portfolio (HQ West Conshohocken)", "town": "Conshohocken", "county": "Montgomery", "state": "PA", "contact_name": "", "title": "Leasing information", "email": "aalrutz@keystone.us", "phone": "", "source_url": "https://keystone.us/connect/", "status": "sent", "last_touch": "2026-09-26", "next_step": "Follow-up #1 on 2026-10-05 if no reply", "notes": "Rosetree (Media PA), Middlesex Science Center; general leasing inbox"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "Philadelphia Business & Technology Center", "property": "5070 Parkside Ave (recurring lunches)", "town": "Philadelphia", "county": "Philadelphia", "state": "PA", "contact_name": "", "title": "", "email": "cpiven@philabtc.com", "phone": "", "source_url": "Gmail thread with cpiven@philabtc.com (jfarrar@philabtc.com cc'd); calendar lunches 8/27, 9/15, 9/16, 9/29", "status": "past_client", "last_touch": "2026-09-29", "next_step": "Active thread: ask about a standing weekly/biweekly lunch and vending for other tenants", "notes": "Repeat client; 4 lunches booked Aug-Sep 2026"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "URBN", "property": "Corporate HQ, Navy Yard (5000 S Broad St)", "town": "Philadelphia", "county": "Philadelphia", "state": "PA", "contact_name": "Lauren Antonelli", "title": "", "email": "lantonelli@urbn.com", "phone": "", "source_url": "Gmail thread 2026-09-16; calendar 'URBN Corporate Event'", "status": "past_client", "last_touch": "2026-09-16", "next_step": "Send thank-you + offer recurring employee lunch vending (template C)", "notes": "Served 9/16; AVE Navy Yard is next door"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "Grupo Bimbo", "property": "32 Parkway Circle (Employee Safety Celebration)", "town": "New Castle", "county": "New Castle", "state": "DE", "contact_name": "Charisse Warrington", "title": "", "email": "charisse.warrington@grupobimbo.com", "phone": "", "source_url": "Gmail thread 2026-09-23/25 (cc Autumn Abrams); calendar 9/24", "status": "past_client", "last_touch": "2026-09-24", "next_step": "Thank-you + ask about other Bimbo sites / recurring days (template C)", "notes": "Served 9/24"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "Power Home Remodeling", "property": "Waterfront Wednesday, 2501 Seaport Dr", "town": "Chester", "county": "Delaware", "state": "PA", "contact_name": "", "title": "", "email": "", "phone": "", "source_url": "Calendar (grill-e-vents) 2026-08-05", "status": "past_client", "last_touch": "2026-08-05", "next_step": "Find contact in Gmail; pitch recurring Waterfront Wednesdays", "notes": "Served 8/5"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "Penske Automotive Group", "property": "Turnersville AutoMall", "town": "Turnersville", "county": "Gloucester", "state": "NJ", "contact_name": "", "title": "", "email": "", "phone": "", "source_url": "Calendar (grill-e-vents) 2026-04-21", "status": "past_client", "last_touch": "2026-04-21", "next_step": "Find contact in Gmail; re-engage (template C)", "notes": "Catering 4/21"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "Rhoads Industries", "property": "1900 Kitty Hawk Ave (via Best Food Trucks)", "town": "Philadelphia", "county": "Philadelphia", "state": "PA", "contact_name": "", "title": "", "email": "", "phone": "", "source_url": "Calendar 2026-06-04 and 06-10", "status": "past_client", "last_touch": "2026-06-10", "next_step": "Booked through BFT; ask BFT/Rhoads about direct vending", "notes": "Served 6/4 and 6/10 via Best Food Trucks"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "LaborFirst", "property": "1000 Midlantic Dr, Laurel Corporate Center", "town": "Mount Laurel", "county": "Burlington", "state": "NJ", "contact_name": "", "title": "", "email": "", "phone": "", "source_url": "Calendar 2026-06-24 'LaborFirst Corporate Event'", "status": "past_client", "last_touch": "2026-06-24", "next_step": "Cite as proof in Zamir follow-up (same campus)", "notes": "Served 6/24; same campus as Zamir Equities prospect"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "Asher's Chocolate Co.", "property": "80 Wambold Rd (vending event)", "town": "Souderton", "county": "Montgomery", "state": "PA", "contact_name": "Jennifer Schubach", "title": "", "email": "jschubach@ashers.com", "phone": "", "source_url": "Gmail thread Sep 2026; calendar 9/12", "status": "past_client", "last_touch": "2026-09-12", "next_step": "Thank-you + ask about repeat employee/vending day", "notes": "Served 9/12; active thread"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "BI (company picnic)", "property": "407 W Vine St", "town": "Hatfield", "county": "Montgomery", "state": "PA", "contact_name": "", "title": "", "email": "", "phone": "", "source_url": "Calendar 2026-07-16 'BI Picnic'", "status": "past_client", "last_touch": "2026-07-16", "next_step": "Find contact in Gmail; re-engage", "notes": "Served 7/16"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "Hospital Week (Eagleville hospital)", "property": "100 Eagleville Rd", "town": "Eagleville", "county": "Montgomery", "state": "PA", "contact_name": "", "title": "", "email": "", "phone": "", "source_url": "Calendar 2026-05-14", "status": "past_client", "last_touch": "2026-05-14", "next_step": "Find contact in Gmail; pitch staff lunch vending", "notes": "Served 5/14"}, {"date_added": "2026-09-30", "segment": "offices", "organization": "Kirkbride Center", "property": "111 N 49th St (Nurse Week)", "town": "Philadelphia", "county": "Philadelphia", "state": "PA", "contact_name": "", "title": "", "email": "", "phone": "", "source_url": "Calendar 2026-05-08", "status": "past_client", "last_touch": "2026-05-08", "next_step": "Find contact in Gmail; re-engage", "notes": "Served 5/8"}, {"date_added": "2026-09-30", "segment": "apartments", "organization": "Arrive at Valley Forge Apartments", "property": "Resident pool party", "town": "Eagleville", "county": "Montgomery", "state": "PA", "contact_name": "Lauren Cox", "title": "", "email": "", "phone": "", "source_url": "Calendar 2026-08-14", "status": "past_client", "last_touch": "2026-08-14", "next_step": "Ask for a fall resident event; get email from Gmail", "notes": "Served 8/14; referenced in our apartment email"}, {"date_added": "2026-09-30", "segment": "apartments", "organization": "Ridings of Woolwich (community)", "property": "189 Cambridge Blvd block party", "town": "Swedesboro", "county": "Gloucester", "state": "NJ", "contact_name": "Rebeckah Navitsky", "title": "", "email": "", "phone": "", "source_url": "Calendar 2026-09-19", "status": "past_client", "last_touch": "2026-09-19", "next_step": "Ask about other community events / neighboring HOAs", "notes": "Served 9/19"}, {"date_added": "2026-09-30", "segment": "apartments", "organization": "Ingerman", "property": "Portfolio (developer/manager, NJ & PA multifamily)", "town": "Collingswood", "county": "Camden", "state": "NJ", "contact_name": "", "title": "Corporate office", "email": "", "phone": "856-662-1730", "source_url": "https://ingerman.com/about/", "status": "to_call", "last_touch": "", "next_step": "Call corporate; ask for community/resident services contact for resident events", "notes": "Runs a Community & Supportive Services dept that curates resident events; alt office 5100 Church Rd, Mount Laurel 856-664-8300. No email published."}, {"date_added": "2026-10-01", "segment": "apartments", "organization": "Forêt Property Management", "property": "Portfolio (Wilmington area)", "town": "Wilmington", "county": "New Castle", "state": "DE", "contact_name": "", "title": "Main office", "email": "", "phone": "302-543-2221", "source_url": "https://www.foretpropertymanagement.com/", "status": "to_call", "last_touch": "", "next_step": "Call; ask for community-events contact", "notes": "Advertises community events at managed properties. No email recorded."}, {"date_added": "2026-10-01", "segment": "apartments", "organization": "FirstService Residential", "property": "Wilmington office (5301 Limestone Rd, Suite 228)", "town": "Wilmington", "county": "New Castle", "state": "DE", "contact_name": "", "title": "Regional office", "email": "", "phone": "", "source_url": "https://www.fsresidential.com/delaware/delaware-property-management-companies/wilmington-property-management/", "status": "to_call", "last_touch": "", "next_step": "Use site contact form / find phone; ask about lifestyle programming", "notes": "Manages HOA/condo communities; lifestyle programming services. No email or phone recorded."}, {"date_added": "2026-10-01", "segment": "apartments", "organization": "ResideBPG", "property": "Portfolio (Wilmington area)", "town": "Wilmington", "county": "New Castle", "state": "DE", "contact_name": "", "title": "Management office", "email": "", "phone": "", "source_url": "https://residebpg.com/about-us/", "status": "to_call", "last_touch": "", "next_step": "Find phone on site; ask about resident events", "notes": "Full-service residential management and leasing in Wilmington. No email or phone recorded."}];
+const BUILT = "2026-10-01";
+const STAGES = [
+  {k:"to_call", label:"To call", c:"var(--s-call)"},
+  {k:"sent", label:"Sent", c:"var(--s-sent)"},
+  {k:"replied", label:"Replied", c:"var(--s-replied)"},
+  {k:"booked", label:"Booked", c:"var(--s-booked)"},
+  {k:"past_client", label:"Past client", c:"var(--s-past)"}
+];
+const STAGE = Object.fromEntries(STAGES.map(s=>[s.k,s]));
+STAGE.inbound = {k:"inbound", label:"Inbound", c:"var(--s-replied)"};
+STAGE.drafted = {k:"drafted", label:"Drafted", c:"var(--s-call)"};
+STAGE.do_not_contact = {k:"do_not_contact", label:"Do not contact", c:"var(--s-dnc)"};
+
+const $ = id => document.getElementById(id);
+const el = (tag, cls, txt) => { const e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; };
+const today = (()=>{ const d=new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); })();
+const parseD = s => { const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||""); return m? new Date(+m[1],+m[2]-1,+m[3]) : null; };
+const daysTo = d => Math.round((d-today)/86400000);
+const fmt = d => d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+const st = p => STAGE[p.status] || {k:p.status,label:p.status,c:"var(--s-sent)"};
+
+// follow-up date: first ISO date inside next_step
+DATA.forEach(p=>{ const m=/(\d{4}-\d{2}-\d{2})/.exec(p.next_step||""); p.due = m? parseD(m[1]) : null; if(p.status==="booked"||p.status==="replied") p.due=null; });
+
+let stageFilter = null, segFilter = "all", query = "";
+
+$("asof").textContent = "Updated " + fmt(parseD(BUILT)||today);
+
+// ---------- next booking hero ----------
+(function(){
+  const box = $("next");
+  const cands = DATA.filter(p=>p.status==="booked").map(p=>{
+    const m=/(\d{1,2})\/(\d{1,2})/.exec(p.next_step||""); if(!m) return null;
+    let d=new Date(today.getFullYear(),+m[1]-1,+m[2]); return {p, date:d};
+  }).filter(e=>e && daysTo(e.date)>=0).sort((a,b)=>a.date-b.date);
+  if(!cands.length) return;
+  const e = cands[0], n = daysTo(e.date);
+  box.hidden = false;
+  const d = el("div","days num"); d.textContent = n; d.appendChild(el("small",null,n===1?"day":"days"));
+  const w = el("div","what");
+  w.appendChild(el("b",null,"Next booking: "+e.p.property));
+  w.appendChild(el("span",null,fmt(e.date)+" · "+e.p.town+", "+e.p.state));
+  box.append(d,w);
+})();
+
+// ---------- stage tiles + bar ----------
+function renderStages(){
+  const box = $("stages"); box.replaceChildren();
+  STAGES.forEach(s=>{
+    const n = DATA.filter(p=>p.status===s.k).length;
+    const b = el("button","stage"); b.style.setProperty("--c",s.c);
+    b.setAttribute("aria-pressed", String(stageFilter===s.k));
+    b.append(el("span","num",n), el("span","lbl",s.label));
+    b.onclick = ()=>{ stageFilter = stageFilter===s.k? null : s.k; renderStages(); renderChips(); renderList(); };
+    box.appendChild(b);
+  });
+  const bar = $("bar"); bar.replaceChildren();
+  STAGES.slice().reverse().forEach(s=>{
+    const n = DATA.filter(p=>p.status===s.k).length; if(!n) return;
+    const i = el("i"); i.style.setProperty("--c",s.c); i.style.flex = n; bar.appendChild(i);
+  });
+  $("totalLbl").textContent = DATA.length+" prospects";
+  const contacted = DATA.filter(p=>["sent","replied","booked"].includes(p.status)).length;
+  const responded = DATA.filter(p=>["replied","booked"].includes(p.status)).length;
+  $("repLbl").textContent = responded+" of "+contacted+" contacted have responded";
+}
+
+function buildDetail(p){
+  const detail = el("div","detail");
+  detail.appendChild(el("div","step",p.next_step||"No next step"));
+  const c = el("div","contact");
+  if(p.contact_name) c.appendChild(contactRow("Who", p.contact_name+(p.title?" · "+p.title:"")));
+  if(p.email) c.appendChild(contactRow("Email", p.email, "mailto:"+p.email));
+  if(p.phone) c.appendChild(contactRow("Phone", p.phone, "tel:"+p.phone.replace(/[^\d+]/g,"")));
+  if(p.source_url && p.source_url.startsWith("http")){
+    const r = el("div","row"); r.append(el("span","k","Source")); const a = el("a","mini","Open page"); a.href=p.source_url; a.target="_blank"; r.appendChild(a); c.appendChild(r);
+  }
+  detail.appendChild(c);
+  if(p.last_touch) detail.appendChild(el("div","note","Last touch "+fmt(parseD(p.last_touch)||today)));
+  if(p.notes) detail.appendChild(el("div","note",p.notes));
+  return detail;
+}
+const GMAIL = "https://mail.google.com/mail/u/0/#label/Vending+Outreach";
+function openSheet(it){
+  closeSheet();
+  const bg = el("div","sheetbg"); bg.id="sheet";
+  bg.onclick = e=>{ if(e.target===bg) closeSheet(); };
+  const sh = el("div","sheet");
+  sh.appendChild(el("h3",null,it.p? it.p.property : it.t));
+  sh.appendChild(el("div","sub", it.p? it.p.organization+" · "+it.p.town+", "+it.p.state : it.sub));
+  const btns = el("div","btns");
+  if(it.p && it.p.status!=="to_call"){
+    const g = el("a","big","Open Gmail drafts"); g.href=GMAIL; g.target="_blank"; btns.appendChild(g);
+  }
+  if(it.p && it.p.phone){ const a = el("a","big alt","Call "+it.p.phone); a.href="tel:"+it.p.phone.replace(/[^\d+]/g,""); btns.appendChild(a); }
+  const x = el("button","big alt","Close"); x.onclick = closeSheet; btns.appendChild(x);
+  sh.appendChild(btns);
+  if(it.p){
+    const d = buildDetail(it.p); d.style.cssText="padding:0;border:0"; sh.appendChild(d);
+  } else {
+    sh.appendChild(el("div","sec","Tap to see details"));
+    DATA.filter(p=>p.status===it.filter).forEach(p=>{
+      const i = el("div","item"); i.appendChild(el("b",null,p.property+" · "+p.town));
+      const d = buildDetail(p); d.style.cssText="padding:0;border:0"; i.appendChild(d); sh.appendChild(i);
+    });
+  }
+  bg.appendChild(sh); document.body.appendChild(bg);
+}
+function closeSheet(){ const b=$("sheet"); if(b) b.remove(); }
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeSheet(); });
+
+// ---------- needs you ----------
+function renderActions(){
+  const box = $("actions"); box.replaceChildren();
+  const items = [];
+  DATA.filter(p=>/^STEVEN:/i.test(p.next_step||"")).forEach(p=>
+    items.push({p, t:"Send reply draft", sub:p.property+" · "+p.town, when:"Now", c:"var(--s-replied)", w:0}));
+  DATA.filter(p=>p.due && p.status==="sent" && !/^STEVEN:/i.test(p.next_step||"") && daysTo(p.due)<=3).sort((a,b)=>a.due-b.due).forEach(p=>{
+    const n = daysTo(p.due);
+    items.push({p, t:"Follow up: "+p.property, sub:p.organization+" · "+p.town, when:n<=0?"Due":"In "+n+"d", c:n<=0?"var(--s-dnc)":"var(--accent)", w:1+n});
+  });
+  const calls = DATA.filter(p=>p.status==="to_call");
+  if(calls.length) items.push({p:null, t:calls.length+" phone calls to make", sub:calls.map(c=>c.property.split(" (")[0]).join(" · "), when:"To do", c:"var(--s-call)", w:50, filter:"to_call"});
+  items.sort((a,b)=>a.w-b.w);
+  $("actCount").textContent = items.length;
+  if(!items.length){ box.appendChild(el("div","empty","Nothing waiting on you.")); return; }
+  items.forEach(it=>{
+    const b = el("button","action"); b.style.setProperty("--c",it.c);
+    b.append(el("span","dot"));
+    const t = el("span","t"); t.append(el("b",null,it.t), el("span",null,it.sub)); b.appendChild(t);
+    b.appendChild(el("span","when",it.when));
+    b.onclick = ()=>openSheet(it);
+    box.appendChild(b);
+  });
+}
+
+// ---------- chips ----------
+function renderChips(){
+  const box = $("chips"); box.replaceChildren();
+  [["all","All"],["apartments","Apartments"],["offices","Offices"]].forEach(([k,l])=>{
+    const c = el("button","chip",l); c.setAttribute("aria-pressed",String(segFilter===k));
+    c.onclick = ()=>{ segFilter=k; renderChips(); renderList(); };
+    box.appendChild(c);
+  });
+  if(stageFilter){
+    const c = el("button","chip","✕ "+STAGE[stageFilter].label); c.setAttribute("aria-pressed","true");
+    c.onclick = ()=>{ stageFilter=null; renderStages(); renderChips(); renderList(); };
+    box.appendChild(c);
+  }
+}
+
+// ---------- list ----------
+const ORDER = {booked:0, replied:1, drafted:2, inbound:2, to_call:3, sent:4, past_client:6, do_not_contact:9};
+function copy(text, btn){
+  const done = ()=>{ const o=btn.textContent; btn.textContent="Copied"; setTimeout(()=>btn.textContent=o,1200); };
+  try{ navigator.clipboard.writeText(text).then(done,()=>{}); }catch(e){}
+}
+function contactRow(k, val, href){
+  const r = el("div","row"); r.append(el("span","k",k), el("span","v",val));
+  const cb = el("button","mini","Copy"); cb.onclick = e=>{ e.stopPropagation(); copy(val,cb); };
+  r.appendChild(cb);
+  if(href){ const a = el("a","mini",k==="Email"?"Email":"Call"); a.href = href; if(href.startsWith("http")) a.target="_blank"; r.appendChild(a); }
+  return r;
+}
+function renderList(openP){
+  const box = $("list"); box.replaceChildren();
+  const q = query.trim().toLowerCase();
+  const rows = DATA.filter(p=>
+    (!stageFilter || p.status===stageFilter) &&
+    (segFilter==="all" || p.segment===segFilter) &&
+    (!q || [p.organization,p.property,p.town,p.contact_name,p.email].join(" ").toLowerCase().includes(q))
+  ).sort((a,b)=> (ORDER[a.status]??5)-(ORDER[b.status]??5) || ((a.due?a.due.getTime():9e15)-(b.due?b.due.getTime():9e15)));
+  if(!rows.length){ box.appendChild(el("div","empty","No prospects match.")); return; }
+  rows.forEach(p=>{
+    const s = st(p);
+    const card = el("div","card"); card.style.setProperty("--c",s.c);
+    const head = el("button"); head.setAttribute("aria-expanded","false");
+    const main = el("span","main");
+    main.append(el("span","org",p.property), el("span","prop",p.organization));
+    const meta = el("span","meta");
+    meta.append(el("span","pill",s.label), el("span","tag",p.town+", "+p.state), el("span","tag",p.segment==="offices"?"Office":"Apartments"));
+    main.appendChild(meta);
+    head.append(el("span","stripe"), main);
+    if(p.due && p.status==="sent"){
+      const n = daysTo(p.due);
+      const d = el("span","due"+(n<=3?" soon":""), n<=0?"Follow up now":"F/U "+fmt(p.due)); head.appendChild(d);
+    }
+    card.appendChild(head);
+    const detail = buildDetail(p); detail.hidden = true;
+    card.appendChild(detail);
+    head.onclick = ()=>{ const open = detail.hidden; detail.hidden = !open; head.setAttribute("aria-expanded",String(open)); };
+    if(openP && openP===p){ detail.hidden=false; head.setAttribute("aria-expanded","true"); }
+    box.appendChild(card);
+  });
+}
+
+$("q").addEventListener("input", e=>{ query=e.target.value; renderList(); });
+renderStages(); renderActions(); renderChips(); renderList();
+</script>
