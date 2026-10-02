@@ -165,3 +165,10 @@
 - Follow-ups: none due today. Follow-up #1 batch is due 10/2 (Zamir, Cherrywood, AVE Blue Bell, AVE Navy Yard, Steve Rush/3000 Market) and 10/5 (Mattson, Mens, Bleiler, Sweeney-Pogwist, Horsham, Blue Bell Villas, Somerset, Union, SFA, Keystone). Brandywine follow-ups held while Anthony Rossi handles tenant events.
 - Research: added 3 Wilmington-area apartment managers (Foret, FirstService Residential, ResideBPG), all phone/contact-form only, status to_call. No new drafts.
 - Blockers: none.
+
+## 2026-10-02 (scheduled run, 12:05 UTC)
+- Handoff check: no other routine; continuing.
+- Sent folder: Steven sent all four reply drafts on 10/1 ~1:36 PM (AVE KOP/Molly, AVE Malvern/Jasmine, Brandywine/Anthony Rossi with menus attached, BXP/Julie). Per his rule, statuses updated now: AVE KOP booked, AVE Malvern replied, BXP replied, Brandywine (Keith Oldt row) replied.
+- NEW REPLY: Anthony Rossi (Brandywine) 10/1 9:40 PM asked for Wed 10/28 11:30-1:00 at 640 Freedom Business Center Dr, King of Prussia (5 buildings, 50-100+ people), a la carte swaps (cheesesteak, tomato soup), and offered Radnor and 101 W Elm. 10/28 is free on grill-e-vents and main calendars. Drafted reply (labeled, BCC crm@): says 10/28 is open, cheesesteak and soup are available on the Full Menu (soup by advance request), $750 minimum applies, asks for Radnor/101 W Elm dates. Steven to review before sending; no calendar hold added yet.
+- Follow-up #1 drafts created (labeled, BCC crm@): Zamir/Laurel Corporate Center, Cherrywood, AVE Blue Bell, AVE Navy Yard. Steve Rush (3000 Market, Brandywine) held, routed via Rossi.
+- No research this run (capacity used on replies/follow-ups). Blockers: none.
