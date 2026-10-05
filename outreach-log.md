@@ -185,3 +185,11 @@
 - Still unsent drafts (follow-up #1): Zamir, Cherrywood, AVE Blue Bell, AVE Navy Yard, plus the obsolete Rossi draft.
 - No new prospect replies. Next due Monday 10/5: follow-up #1 for Mattson, Mens, Bleiler, Horsham, Blue Bell Villas, Somerset, Union, SFA, Keystone.
 - Blockers: none.
+
+## 2026-10-05 (scheduled run, 12:05 UTC)
+- Handoff check: no other routine; continuing.
+- Sent + inbox: no new prospect replies; nothing new sent since Steven's 10/3 Rossi reply.
+- Follow-up #1 drafts created (labeled, BCC crm@, reply-in-thread, no signature, opt-out line): Steve Mattson (Morgan, East Norriton), Allison Mens (Morgan, Bryn Mawr), AVE Horsham, Blue Bell Villas, AVE Somerset, AVE Union, SFA Woodland Falls, Keystone. Brandywine contacts (Bleiler, Oldt, Sweeney-Pogwist, Rush) held; Anthony Rossi handles them.
+- Unsent drafts now: 8 new + 4 from 10/2 (Zamir, Cherrywood, AVE Blue Bell, AVE Navy Yard) + obsolete Rossi draft (discard).
+- Next: Associa final follow-up ~10/7; BXP nudge ~10/15; AVE KOP event 10/14.
+- Blockers: none.
