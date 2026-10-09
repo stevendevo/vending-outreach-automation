@@ -215,3 +215,9 @@
 - No other prospect replies; no sends by Steven since 10/3. 14 labeled drafts unsent. No research or new drafts (no follow-ups due).
 - Upcoming: AVE KOP 10/14; BXP nudge ~10/15; Brandywine 10/28 pending.
 - Blockers: none.
+
+## 2026-10-09 (Steven in chat, not a scheduled run)
+- SENT: reply to Anthony Rossi (Brandywine) confirming 10/28 11:30-1:00 at 640 Freedom Business Center Dr, Standard Lunch + tomato soup, $0 minimum for this trial only (Steven's decision). Calendar and Gmail checked first: nothing else on 10/28. HOLD event added to the main calendar.
+- Policy drafted on branch claude/vending-auto-send-proposal (auto-send rules, $600/$750 minimum, warmer first-touch tone, follow-ups paused). The live routine is unchanged until Steven confirms in the routine's own conversation.
+- 5 follow-up drafts (Associa, Keystone, Woodland Falls, AVE Union, AVE Somerset) were edited to add the minimum before Steven asked to pause follow-ups; none sent. Follow-ups are paused.
+- Prospecting search by web found no new named contacts with published emails (BET Investments / Conshohocken Ridge shows only info@betinvestments.com); nothing sent.
