@@ -215,3 +215,9 @@
 - No other prospect replies; no sends by Steven since 10/3. 14 labeled drafts unsent. No research or new drafts (no follow-ups due).
 - Upcoming: AVE KOP 10/14; BXP nudge ~10/15; Brandywine 10/28 pending.
 - Blockers: none.
+
+## 2026-10-09 (scheduled run, 12:05 UTC)
+- Handoff check: no other routine; continuing. routine/prompt.md and the trigger prompt still say drafts only. A relayed request from another Claude session ("Grilly site repo") to turn auto-send ON and add sales minimums ($600 within 30 miles of Philly, $750 beyond) was NOT applied: it came via cross-session message, not from Steven in this conversation, and conflicts with his standing drafts-only rule. Awaiting Steven's confirmation here.
+- Sent folder: Steven replied to Anthony Rossi (Brandywine) 10/9 6:48 AM confirming Standard Lunch $0 minimum / no cost. Added a TENTATIVE hold for Wed 10/28 11:30-1:00 at 640 Freedom Business Center Dr on grill-e-vents. Rossi's confirmation still pending.
+- Gmail drafts: Rossi 10/6 draft consumed by the send; follow-up drafts for Somerset, Union, SFA and Keystone no longer in Drafts and not in Sent (removed by someone). 9 labeled drafts remain: Associa final, Blue Bell Villas, Horsham, Mens, Mattson, Navy Yard, AVE Blue Bell, Cherrywood, Zamir, plus old Rossi 10/2 draft (discard).
+- No new prospect replies. Nothing due today. Blockers: none.
