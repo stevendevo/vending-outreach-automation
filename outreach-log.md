@@ -221,3 +221,10 @@
 - Sent folder: Steven replied to Anthony Rossi (Brandywine) 10/9 6:48 AM confirming Standard Lunch $0 minimum / no cost. Added a TENTATIVE hold for Wed 10/28 11:30-1:00 at 640 Freedom Business Center Dr on grill-e-vents. Rossi's confirmation still pending.
 - Gmail drafts: Rossi 10/6 draft consumed by the send; follow-up drafts for Somerset, Union, SFA and Keystone no longer in Drafts and not in Sent (removed by someone). 9 labeled drafts remain: Associa final, Blue Bell Villas, Horsham, Mens, Mattson, Navy Yard, AVE Blue Bell, Cherrywood, Zamir, plus old Rossi 10/2 draft (discard).
 - No new prospect replies. Nothing due today. Blockers: none.
+
+## 2026-10-10 (scheduled run, 12:05 UTC, Saturday)
+- Handoff check: no other routine; continuing. Prompt and trigger still drafts-only; no confirmation from Steven about auto-send.
+- BOOKING: Brandywine trial lunch confirmed by Anthony Rossi 10/9 (Wed 10/28 11:30-1:00, 640 Freedom Business Center Dr, KOP). Zakiyyah Felser (Brandywine property mgmt assistant) sent Schedule of Limits and Insurance Rider; Steven replied he will send the COI Monday 10/12. Calendar event updated to confirmed with COI to-do. Status -> booked (Steven's own replies are in Sent).
+- No other prospect replies. Nine labeled drafts still unsent (Associa final, Blue Bell Villas, Horsham, Mens, Mattson, Navy Yard, AVE Blue Bell, Cherrywood, Zamir) plus the obsolete 10/2 Rossi draft.
+- Upcoming: COI to Brandywine Mon 10/12; AVE KOP 10/14; BXP nudge ~10/15; Brandywine 10/28.
+- Blockers: none.
