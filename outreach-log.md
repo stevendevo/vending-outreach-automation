@@ -235,3 +235,10 @@
 - Unsent labeled drafts: 10 (Associa final, Blue Bell Villas, Horsham, Mens, Mattson, Navy Yard, AVE Blue Bell, Cherrywood, Zamir, obsolete 10/2 Rossi draft).
 - Upcoming: COI to Brandywine Mon 10/12; AVE KOP event Wed 10/14; BXP nudge ~10/15; Brandywine lunch 10/28.
 - Blockers: none.
+
+## 2026-10-12 (scheduled run, 12:05 UTC, Monday)
+- Handoff check: no other routine; continuing. Prompt and trigger still drafts-only.
+- Sent + inbox: nothing in the last 2 days with any campaign contact. COI to Zakiyyah Felser (Brandywine) is due today per Steven's 10/9 note; no send yet.
+- No follow-ups due. Ten labeled drafts remain unsent (oldest from 10/2). No new drafts or research while the backlog stands.
+- Upcoming: AVE KOP event Wed 10/14 (confirm parking/headcount); BXP nudge ~10/15; Brandywine lunch 10/28.
+- Blockers: none.
