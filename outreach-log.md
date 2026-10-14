@@ -249,3 +249,11 @@
 - No follow-ups due; ten labeled drafts remain unsent. No new drafts or research.
 - Upcoming: AVE King of Prussia event TOMORROW Wed 10/14 4-7pm (555 S Goddard Blvd) - parking/headcount confirmation still open; BXP nudge ~10/15; Brandywine lunch 10/28.
 - Blockers: none.
+
+## 2026-10-14 (scheduled run, 12:05 UTC)
+- Handoff check: no other routine; continuing. Prompt and trigger still drafts-only.
+- TODAY: AVE King of Prussia resident food truck night, 4-7pm, 555 S Goddard Blvd.
+- REPLY NEEDING ATTENTION: AVE Malvern - Jasmine Quinn replied 10/13: wants a November Thursday, 5-7 PM. Drafted reply (labeled, BCC crm@) offering Thu Nov 5, 12, 19 (all open on both calendars; 26 is Thanksgiving) and asking parking, headcount, COI needs, flyer. Steven to review/send; calendar entry once she picks a date. Status stays "sent" until Steven's reply shows up in Sent.
+- No other prospect replies. No Brandywine COI email seen in Sent yet. Eleven labeled drafts unsent (incl. new Malvern one and obsolete 10/2 Rossi draft).
+- Upcoming: BXP nudge ~10/15; Brandywine lunch 10/28.
+- Blockers: none.
