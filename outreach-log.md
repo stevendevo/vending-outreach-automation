@@ -257,3 +257,11 @@
 - No other prospect replies. No Brandywine COI email seen in Sent yet. Eleven labeled drafts unsent (incl. new Malvern one and obsolete 10/2 Rossi draft).
 - Upcoming: BXP nudge ~10/15; Brandywine lunch 10/28.
 - Blockers: none.
+
+## 2026-10-16 and 2026-10-17 (scheduled runs)
+- Handoff check: no other routine; prompt/trigger still drafts-only.
+- Steven's own sends found in Sent: 10/14 AVE King of Prussia event canceled (truck fuel pump replacement), asked Molly/Blair for a new date. 10/16 to Brandywine (Zakiyyah Felser): asked to swap the 10/28 lunch because a DC catered event overlaps and, "for financial reasons, we can only hold vending dates with a guaranteed minimum in place." Zakiyyah (10/16) also needs the COI before 10/28; description line "610-680 Freedom Business Center Drive"; she also asked for pricing menu, truck/food photos and logo for the flyer.
+- POLICY CHANGE signaled: vending dates require a guaranteed minimum (matches the relayed 10/9 request from the other session: $600 within 30 miles of Philly, $750 farther). The unsent drafts (Malvern, Associa, Blue Bell Villas, Horsham, Mens, Mattson, Navy Yard, AVE Blue Bell, Cherrywood, Zamir) still say "no cost" and are NOT updated; Steven to confirm the new terms in this conversation before I rewrite them. The 10/14 BXP nudge draft I created is no longer in Gmail Drafts; not recreated.
+- Calendar: AVE KOP 10/14 event retitled CANCELED; Brandywine 10/28 retitled AT RISK (swap requested).
+- AVE Malvern (Jasmine Quinn, 10/13, wants a November Thursday 5-7) still unanswered; draft waiting for Steven.
+- No new prospect replies. Blockers: none (awaiting Steven's decision on new terms).
